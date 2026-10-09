@@ -1,12 +1,52 @@
 # Runbook — set up from zero
 
-1. **GitHub:** create the repo `AttendanceTrackerV2`, push `main`, and enable branch protection (see [ci-cd.md](../architecture/ci-cd.md#branching-and-protection)).
-2. **Supabase:** create the projects `uc-attendance-staging` and `uc-attendance-prod` (region `sa-east-1`, São Paulo). Save the project refs and DB passwords.
-   - Auth → Providers: enable Email (turn off "Confirm email") and Google (create an OAuth client in Google Cloud Console; add the Supabase callback URL).
-   - Auth → URL configuration: the site URL is the Vercel prod URL. Add the preview URL pattern to the redirect allow-list.
-   - Optional: Auth → SMTP → Resend (`smtp.resend.com`, port 465, user `resend`, password = API key).
-3. **Vercel:** import the repo (framework Next.js). Set the env vars for Preview (staging values) and Production (prod values): see [ci-cd.md](../architecture/ci-cd.md#secrets-and-variables). Generate `KIOSK_TOKEN` and `CRON_SECRET` with `openssl rand -base64 48`.
-4. **GitHub secrets:** add everything in the GitHub rows of that table. Create a GitHub Environment `production` (optionally with required reviewers).
-5. **First deploy:** merge to `main`, then confirm `deploy.yml` migrates both DBs and deploys.
-6. **First admin:** sign up on prod. In the Supabase SQL editor, run `insert into admins(user_id) select id from auth.users where email = '<email>';`. The first admin can create their own member profile through an invite they generate.
-7. Continue with [new-season.md](new-season.md) and [kiosk-setup.md](kiosk-setup.md).
+How the infrastructure was created in October 2026, and how to recreate it. Never paste secret values into chats, issues or commits. Keep them in the team password manager.
+
+## 1. Supabase (two projects)
+
+1. Go to <https://supabase.com/dashboard>, create an organization on the **Free** plan (it allows only 2 active projects), and create these projects:
+
+   | Project | Region | Ref |
+   |---|---|---|
+   | `uc-attendance-staging` | South America (São Paulo) | `tgpsavnhvhovlhdznasu` |
+   | `uc-attendance-prod` | South America (São Paulo) | `xnhrsudlvgeglesmhezc` |
+
+   - Database password: generate one and store it in the password manager.
+   - Security options: **Enable Data API** on; **Automatically expose new tables** **off**; **Enable automatic RLS** on. See [data-model.md](../architecture/data-model.md#exposure-and-rls-defaults).
+2. Authentication → Sign In / Providers → **Email** on, **Confirm email off** (ADR 0002). Google is configured in milestone 5.
+3. Authentication → URL Configuration:
+   - prod: Site URL `https://attendance-tracker-v2-ten.vercel.app`, plus the redirect URL `https://attendance-tracker-v2-ten.vercel.app/**`
+   - staging: the Vercel preview URL wildcard
+4. Account → Access Tokens: create a token with **Project** resource access for both projects, the permissions **Project Settings: Read**, **Migrations: Read & Write** and **Connection Pooling: Read**, and a 1-year expiry.
+
+## 2. Vercel
+
+1. Sign up on **Hobby** with GitHub, and install the Vercel GitHub App on the `1156UnderControl` org (an org owner must approve).
+2. Import `1156UnderControl/AttendanceTrackerV2` into the **Under Control** team, with the project name `attendance-tracker-v2`, the Next.js preset, and no build overrides.
+3. Settings → Environment Variables: add each variable twice, once for Production (prod values) and once for Preview (staging values). Names, types and notes are listed in [ci-cd.md](../architecture/ci-cd.md#secrets-and-variables).
+4. Account → Tokens: create a token scoped to the **Under Control** team, with a 1-year expiry.
+
+## 3. GitHub
+
+Run each command; it prompts for the value without echoing it:
+
+```bash
+gh secret set SUPABASE_ACCESS_TOKEN
+```
+
+The other secrets work the same way: `SUPABASE_PROJECT_REF_STAGING`, `SUPABASE_PROJECT_REF_PROD`, `SUPABASE_DB_PASSWORD_STAGING`, `SUPABASE_DB_PASSWORD_PROD`, `VERCEL_TOKEN`, `VERCEL_ORG_ID` (the **Team ID**), `VERCEL_PROJECT_ID`.
+
+The repository variable, the `production` environment and branch protection were set with `gh` (see [ci-cd.md](../architecture/ci-cd.md#branching-and-protection)):
+
+```bash
+gh variable set PRODUCTION_URL --body https://attendance-tracker-v2-ten.vercel.app
+```
+
+## 4. Verify
+
+1. Run the **Keep-alive** workflow manually (Actions → Keep-alive → Run workflow). Both DB pings and the health check should pass.
+2. Merge a PR to `main` and check that **Deploy** migrates staging, then prod, then deploys and passes the smoke test.
+
+## 5. First admin
+
+This comes after milestone 5. Sign up on prod, then in the Supabase SQL editor run `insert into admins(user_id) select id from auth.users where email = '<email>';`. Then continue with [new-season.md](new-season.md) and [kiosk-setup.md](kiosk-setup.md).

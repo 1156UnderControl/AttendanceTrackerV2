@@ -2,6 +2,15 @@
 
 All tables live in the `public` schema of Supabase Postgres. Schema changes happen **only** through migrations in `supabase/migrations/`.
 
+## Exposure and RLS defaults
+
+The cloud projects are created with **"Automatically expose new tables" off** and **automatic RLS on**. Local Supabase doesn't copy those settings, so every migration must:
+
+1. `alter table … enable row level security;` on every new table
+2. `grant` only the privileges the RLS matrix below needs, to `anon` / `authenticated`, down to column grants where noted
+
+A pgTAP test fails if any table in `public` has RLS disabled. This keeps local, staging and prod identical.
+
 ## ER diagram
 
 ```mermaid

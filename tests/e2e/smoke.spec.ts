@@ -28,6 +28,6 @@ test.describe("smoke", () => {
   test("health endpoint responds", async ({ request }) => {
     const response = await request.get("/api/health");
     expect(response.ok()).toBe(true);
-    expect(await response.json()).toMatchObject({ status: "ok" });
+    expect(await response.json()).toMatchObject({ status: "ok", supabase: "not_configured" });
   });
 });
