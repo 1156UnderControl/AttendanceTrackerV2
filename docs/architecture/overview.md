@@ -72,7 +72,7 @@ flowchart TB
 
 ## Code layout (planned)
 
-```
+```text
 src/
   app/                 # routes above (App Router)
   components/          # shared UI (shadcn/ui based)

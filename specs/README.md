@@ -20,6 +20,6 @@ Acceptance criteria use IDs `NNN-ACx`. Every one must have at least one test who
 | 004 | [Dashboard and rankings](004-dashboard-rankings/spec.md) | Approved |
 | 005 | [Member self-service](005-member-self-service/spec.md) | Approved |
 | 006 | [Auto-close and corrections](006-auto-close-and-corrections/spec.md) | Approved |
-| 007 | [CI/CD pipeline](007-ci-cd-pipeline/spec.md) | Approved |
+| 007 | [CI/CD pipeline](007-ci-cd-pipeline/spec.md) | In progress |
 
 Templates: [000-template](000-template/).

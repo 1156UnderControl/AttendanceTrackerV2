@@ -1,0 +1,12 @@
+{
+  "config": {
+    "default": true,
+    "MD013": false, // line length: prose is wrapped by editors
+    "MD024": { "siblings_only": true },
+    "MD033": false, // inline HTML (<br/> in Mermaid labels)
+    "MD041": false, // templates start with placeholders
+    "MD060": false,
+  },
+  "globs": ["**/*.md"],
+  "ignores": ["node_modules/**", ".next/**", "playwright-report/**", "test-results/**"],
+}

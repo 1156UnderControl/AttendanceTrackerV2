@@ -24,3 +24,9 @@ test-results/
 # os / editor
 .DS_Store
 *.log
+
+# typescript / next
+*.tsbuildinfo
+next-env.d.ts
+*.pem
+.pnpm-debug.log*
