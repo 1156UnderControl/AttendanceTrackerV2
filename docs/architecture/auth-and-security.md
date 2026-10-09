@@ -40,14 +40,14 @@
 
 | Secret | Where | Used by |
 |---|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Vercel (per env) | Browser and server |
-| `SUPABASE_SERVICE_ROLE_KEY` | Vercel (server only) | Kiosk and cron RPCs only |
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Vercel (per env) | Browser and server |
+| `SUPABASE_SECRET_KEY` (`sb_secret_…`, acts as the `service_role` Postgres role) | Vercel (server only) | Kiosk and cron RPCs only |
 | `KIOSK_TOKEN` | Vercel | Kiosk cookie check |
 | `CRON_SECRET` | Vercel | Cron route |
 | `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD_*`, `SUPABASE_PROJECT_REF_*` | GitHub Actions | Migrations |
 | `RESEND_API_KEY` (optional) | Supabase Auth SMTP settings | Password reset and invite emails |
 
-Never prefix the service role key with `NEXT_PUBLIC_`. Never commit `.env*` files except `.env.example`.
+Never prefix the secret key with `NEXT_PUBLIC_`. Never commit `.env*` files except `.env.example`.
 
 ## Threats considered
 

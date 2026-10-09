@@ -11,10 +11,10 @@
 - **007-AC3**: On merge to `main`, after CI passes, `deploy.yml` runs `supabase db push` on staging, then on prod, then `vercel deploy --prod`. If any step fails, production isn't deployed.
 - **007-AC4**: Vercel's automatic production deploys from Git are disabled. Prod deploys only via `deploy.yml`.
 - **007-AC5**: `keepalive.yml` runs weekly and on demand, hits `/api/health` on staging and prod, and fails visibly if either is down.
-- **007-AC6**: Vercel Cron is configured in `vercel.json` to call `/api/cron/auto-close` daily at 07:00 UTC (04:00 BRT).
+- **007-AC6**: Vercel Cron is configured in `vercel.json` to call `/api/cron/auto-close` daily at 07:00 UTC (04:00 BRT). This is delivered with spec 006, so the cron never calls a missing route.
 - **007-AC7**: Dependabot is enabled for npm and GitHub Actions. The PR template has the SDD checklist.
 - **007-AC8**: No secret is in the repo. `.env.example` lists every variable with a description.
-- **007-AC9** (optional): A weekly `pg_dump` of prod is uploaded as an Actions artifact with 90-day retention.
+- **007-AC9** (optional): A weekly dump of prod, **encrypted with age** before upload, is stored as an Actions artifact with 90-day retention. The repo is public, so unencrypted artifacts would expose member data.
 - **007-AC10**: The `quality` job fails if `messages/en.json` (or any other locale) is missing a key from `messages/pt-BR.json` or has extra keys, and if the typecheck finds an unknown message key.
 
 ## Out of scope
