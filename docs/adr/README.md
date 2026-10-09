@@ -10,3 +10,4 @@ We use the [MADR](https://adr.github.io/madr/) format. To add one, copy [0000-te
 | [0004](0004-per-track-season-phases.md) | Configurable season phases per track | Accepted |
 | [0005](0005-kiosk-device-token.md) | Kiosk authenticated as a device | Accepted |
 | [0006](0006-i18n-next-intl.md) | Internationalization with next-intl | Accepted |
+| [0007](0007-cache-components-disabled.md) | Cache Components disabled (for now) | Accepted |

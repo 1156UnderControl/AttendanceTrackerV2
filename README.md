@@ -6,7 +6,29 @@ Attendance tracker for the **1156 Under Control** robotics team (FRC and FTC).
 - **Members** (students and mentors) join by invitation and can see their own attendance.
 - **Admins** see rankings and attendance percentages per track (FRC students, FTC students, Mentors) against configurable season goals.
 
-> Status: **specification phase.** No application code yet. Start with the docs below.
+> Status: **milestone 1 (bootstrap).** The app skeleton, tooling and CI are in place. The features follow the [specs](specs/).
+
+## Quick start
+
+Requirements: Node 22 (`.nvmrc`), and Docker Desktop for the local database.
+
+```bash
+corepack enable
+```
+
+```bash
+pnpm install
+```
+
+```bash
+cp .env.example .env.local
+```
+
+```bash
+pnpm dev
+```
+
+Open <http://localhost:3000>. For the local database run `pnpm db:start`; it prints the keys to put in `.env.local`. All commands are listed in [AGENTS.md](AGENTS.md#commands).
 
 ## Documentation map
 
@@ -26,7 +48,7 @@ Attendance tracker for the **1156 Under Control** robotics team (FRC and FTC).
 
 ## Stack
 
-Next.js (App Router) + TypeScript on **Vercel Hobby**, **Supabase Free** (Postgres + Auth), GitHub Actions for CI/CD. Everything runs on free tiers.
+Next.js 16 (App Router) + TypeScript + Tailwind + next-intl (pt-BR / en) on **Vercel Hobby**, **Supabase Free** (Postgres + Auth), GitHub Actions for CI/CD. Everything runs on free tiers.
 
 ## How we work
 

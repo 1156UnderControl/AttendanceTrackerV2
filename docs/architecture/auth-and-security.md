@@ -32,7 +32,7 @@
 
 ## Authorization layers
 
-1. **Middleware**: redirects unauthenticated users from `/admin` and `/minha-presenca` to `/login`.
+1. **Proxy** (`src/proxy.ts`, Next 16's renamed middleware): an optimistic check that redirects unauthenticated users from `/admin` and `/minha-presenca` to `/login`.
 2. **Server helpers**: `requireAdmin()` and `requireMember()` at the top of every server action and page.
 3. **RLS**: the final guard. See the matrix in [data-model.md](data-model.md#rls-policy-matrix).
 

@@ -1,12 +1,14 @@
 # AGENTS.md — rules for AI agents and contributors
 
 ## Read before doing anything
+
 1. [docs/sdd.md](docs/sdd.md) for scope and requirements.
 2. [docs/architecture/](docs/architecture/) for how the system fits together.
 3. The spec for the feature you are touching, in [specs/](specs/).
 4. Relevant ADRs in [docs/adr/](docs/adr/). Do not contradict an accepted ADR without writing a new one that supersedes it.
 
 ## Spec-Driven Development workflow
+
 1. **No code without a spec.** If the work has no spec, write `specs/NNN-name/spec.md` from [the template](specs/000-template/spec.md) and stop for review.
 2. Write `plan.md` (technical design), then `tasks.md` (ordered checklist).
 3. Implement task by task. Tick tasks in `tasks.md` in the same PR.
@@ -14,7 +16,8 @@
 5. When done, set the spec status to `Implemented` and update any architecture doc or ADR the change touched.
 
 ## Stack and conventions
-- Next.js App Router, TypeScript `strict`, pnpm.
+
+- Next.js 16 App Router, TypeScript `strict`, pnpm (run `corepack enable` once). **Cache Components is off** (ADR 0007). Next 16 renamed `middleware.ts` to `proxy.ts`.
 - Supabase: schema changes **only** through SQL migrations in `supabase/migrations/` (`supabase migration new <name>`). Never edit the remote DB by hand.
 - Regenerate DB types after migrations: `pnpm db:types`.
 - Business rules that touch many rows (rankings, expected hours) live in SQL functions. Pure date/percentage math is mirrored in `src/lib/attendance/` and unit-tested.
@@ -24,11 +27,14 @@
 - Never commit secrets. Add new env vars to `.env.example` and [docs/architecture/ci-cd.md](docs/architecture/ci-cd.md).
 - Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, `test:`, `refactor:`).
 
-## Commands (available after bootstrap, milestone 1)
+## Commands
+
 | Command | What it does |
 |---|---|
 | `pnpm dev` | Next.js dev server |
-| `pnpm lint` / `pnpm typecheck` | ESLint / `tsc --noEmit` |
+| `pnpm lint` / `pnpm typecheck` | ESLint / route typegen + `tsc --noEmit` |
+| `pnpm format` / `pnpm format:check` | Prettier write / check |
+| `pnpm docs:lint` | markdownlint on all docs |
 | `pnpm test` | Vitest unit tests |
 | `pnpm test:e2e` | Playwright e2e (needs local Supabase) |
 | `pnpm db:start` / `pnpm db:reset` | Start local Supabase / re-apply migrations + seed |
@@ -37,6 +43,17 @@
 | `pnpm i18n:check` | Verify every locale has exactly the keys in `messages/pt-BR.json` |
 
 ## Definition of done
+
 - Lint, typecheck, unit, DB and e2e tests are green in CI.
 - The spec's acceptance criteria are covered by tagged tests.
 - Docs and ADRs are updated, and the PR template checklist is complete.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

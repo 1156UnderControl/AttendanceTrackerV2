@@ -1,0 +1,16 @@
+{
+  "metadata": {
+    "title": "Under Control Attendance",
+    "description": "Attendance tracking for team 1156 Under Control (FRC and FTC)."
+  },
+  "home": {
+    "title": "Under Control Attendance",
+    "subtitle": "Attendance tracking for team 1156 — FRC and FTC.",
+    "status": "Under construction. Coming soon: kiosk, invites and dashboard."
+  },
+  "language": {
+    "label": "Language",
+    "pt-BR": "Português",
+    "en": "English"
+  }
+}

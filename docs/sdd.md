@@ -59,6 +59,7 @@ See [glossary.md](glossary.md) for the Portuguese terms.
 IDs are referenced by the specs and tests.
 
 ### FR-1 Kiosk ([spec 001](../specs/001-kiosk-check-in-out/spec.md))
+
 - FR-1.1 Typing a valid code and pressing Enter opens a session when the member has none open. If one is open, it closes it.
 - FR-1.2 The screen shows everyone currently checked in. Clicking a name, then confirming, closes that session.
 - FR-1.3 Clear feedback: welcome or goodbye with the name, errors for unknown or inactive codes, and a retry message on network failure.
@@ -66,6 +67,7 @@ IDs are referenced by the specs and tests.
 - FR-1.5 The kiosk route only works on a device unlocked with the kiosk token.
 
 ### FR-2 Invitations and registration ([spec 002](../specs/002-invites-and-registration/spec.md))
+
 - FR-2.1 An admin creates an invite: type (student/mentor), optional fixed category, expiry, and max uses.
 - FR-2.2 The invite link (`/convite/<token>`) can be copied and shared. Only a hash of the token is stored.
 - FR-2.3 The invitee signs up with Google or email + password and provides: name, **category (FRC/FTC, required)**, and a 6-digit entrance code (unique, or auto-generated).
@@ -73,12 +75,14 @@ IDs are referenced by the specs and tests.
 - FR-2.5 Admins list, edit, deactivate and reactivate members, promote or demote admins, and revoke invites.
 
 ### FR-3 Seasons and phases ([spec 003](../specs/003-seasons-and-phases/spec.md))
+
 - FR-3.1 Admins create seasons and mark one as current.
 - FR-3.2 Each season has an independent phase table for each track: FRC students, FTC students, Mentors.
 - FR-3.3 Phases (name, start date, end date, hours/week) are fully configurable. Within a track they can't overlap and must fall inside the season. Gaps are allowed and count as 0 expected hours.
 - FR-3.4 Phases can be copied from another track or from the previous season.
 
 ### FR-4 Dashboard and rankings ([spec 004](../specs/004-dashboard-rankings/spec.md))
+
 - FR-4.1 Three rankings: FRC students, FTC students, Mentors.
 - FR-4.2 Columns: position, name, hours this week, hours in the current phase, season hours, expected hours to date, % to date. A season % is also available.
 - FR-4.3 Color bands: ≥100% green, 75–99% yellow, <75% red. The thresholds are configurable.
@@ -87,16 +91,19 @@ IDs are referenced by the specs and tests.
 - FR-4.6 CSV export of sessions and rankings.
 
 ### FR-5 Member self-service ([spec 005](../specs/005-member-self-service/spec.md))
+
 - FR-5.1 "Minha presença" shows the member's own sessions, hours (week, phase, season), %, and position in their track.
 - FR-5.2 Members can edit their name and entrance code. Type and category can only be changed by an admin.
 
 ### FR-6 Forgotten check-outs and corrections ([spec 006](../specs/006-auto-close-and-corrections/spec.md))
+
 - FR-6.1 A daily job at the cutoff time (default **04:00** local, so late-night work still counts) closes every session that is still open. They are flagged `auto_closed` and credited **0 h**.
 - FR-6.2 A member can request a correction ("I left at 18:30") on their own auto-closed session.
 - FR-6.3 An admin approves or rejects corrections and can directly edit or discard any session.
 - FR-6.4 Every admin change to sessions, members, invites or phases is written to an audit log.
 
 ### FR-7 CI/CD ([spec 007](../specs/007-ci-cd-pipeline/spec.md))
+
 - FR-7.1 Every PR runs lint, typecheck, unit, DB and e2e tests, plus docs checks, and gets a Vercel preview deploy.
 - FR-7.2 A merge to `main` applies migrations to staging, then production, and deploys to production automatically.
 - FR-7.3 A scheduled keep-alive stops the free Supabase project from pausing.
@@ -129,6 +136,7 @@ See [architecture/overview.md](architecture/overview.md). In short: a single Nex
 | [0004](adr/0004-per-track-season-phases.md) | Configurable season phases per track (FRC students, FTC students, Mentors) |
 | [0005](adr/0005-kiosk-device-token.md) | Kiosk authenticated as a device, not a user |
 | [0006](adr/0006-i18n-next-intl.md) | Internationalization with next-intl: pt-BR + en, no locale in the URL |
+| [0007](adr/0007-cache-components-disabled.md) | Next.js Cache Components disabled until the next major version |
 
 ## 10. Milestones
 
