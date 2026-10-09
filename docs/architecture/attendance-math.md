@@ -1,6 +1,9 @@
 # Attendance math
 
-This is the single source of truth for how hours, expected hours and percentages are computed. The SQL functions and `src/lib/attendance/` must both implement exactly this, and both are tested against the worked examples below.
+This is the single source of truth for how hours, expected hours and percentages are computed. Two implementations must agree on it, and both are tested against the worked examples below:
+
+- **SQL** (authoritative, used for rankings and stats): `supabase/migrations/20261010000300_attendance_math.sql`, tested in `supabase/tests/01_attendance_math_test.sql`
+- **TypeScript** (UI-side previews and live timers): `src/lib/attendance/math.ts`, tested in `math.test.ts`
 
 ## Definitions
 

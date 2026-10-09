@@ -24,7 +24,7 @@ erDiagram
 
   members {
     uuid id PK
-    uuid user_id FK "unique, auth.users"
+    uuid user_id FK "unique, nullable, auth.users"
     text name
     text code "unique, 6 digits"
     member_type type "student | mentor"
@@ -90,7 +90,7 @@ erDiagram
     uuid actor
     text action
     text entity
-    uuid entity_id
+    text entity_id
     jsonb before
     jsonb after
     timestamptz at
@@ -130,34 +130,42 @@ erDiagram
 
 ## SQL functions (RPC)
 
-| Function | Security | Caller | Purpose |
-|---|---|---|---|
-| `is_admin()` | definer, stable | RLS policies | `exists (select 1 from admins where user_id = auth.uid())` |
-| `invite_preview(token)` | definer | anon/authenticated | Returns validity, type and fixed category. Never returns other data. |
-| `redeem_invite(token, name, category, code)` | definer | authenticated (no member yet) | Validates and creates the member atomically. |
-| `kiosk_toggle(code)` | definer | service role only | Opens or closes a session. Returns `{action, name, locale, minutes}` so the kiosk greets the member in their language. |
-| `kiosk_checkout(member_id)` | definer | service role only | Closes an open session. |
-| `kiosk_present()` | definer | service role only | Lists open sessions: names and check-in times only. |
-| `close_stale_sessions()` | definer | service role only (cron) | Auto-closes open sessions (see ADR 0003). |
-| `expected_minutes(season_id, track, at)` | invoker, stable | any | Expected minutes to date. |
-| `ranking(season_id, track, at)` | definer | admin (checks `is_admin()`) | The full ranking. |
-| `my_stats(season_id)` | definer | member | The caller's stats plus their position in their track. |
-| `request_correction(session_id, check_out, note)` | definer | member | Only on the member's own auto-closed session. |
-| `review_correction(id, approve)` | definer | admin | Applies or rejects, and writes the audit log. |
+Implemented in `supabase/migrations/` and tested in `supabase/tests/`. Every `security definer` function pins `search_path = ''`. Errors are raised as stable English codes in the message (e.g. `CODE_IN_USE`, `INVITE_INVALID`, `FORBIDDEN`), which the UI translates (ADR 0006).
 
-`execute` on service-role-only functions is revoked from `anon` and `authenticated`.
+| Function | Who can call it | Purpose |
+|---|---|---|
+| `is_admin()`, `current_member_id()`, `app_timezone()`, `member_track(type, category)` | authenticated (RLS helpers) | Building blocks for policies and other functions |
+| `local_day_start(date)`, `session_minutes(session, from, to, now)`, `expected_minutes(season, track, at)`, `expected_full_minutes(season, track)`, `current_season_id()` | authenticated | [Attendance math](attendance-math.md) |
+| `ranking(season, track, at)` | admin (checks `is_admin()`) | Full ranking of one track: week, phase and season minutes, expected, % to date and % of season, dense-rank position |
+| `my_stats(season?, at)` | member | The caller's row of their track's ranking plus the track size. Never returns other members. |
+| `create_invite(type, category?, label, max_uses, expires_in_days)` | admin | Returns `{id, token}` once; stores only `sha256(token)` |
+| `invite_preview(token)` | anon, authenticated | `{valid, type, category}` only |
+| `redeem_invite(token, name, category?, code?, locale)` | authenticated without a member row | Creates the member atomically and consumes one use. Errors: `INVITE_INVALID`, `ALREADY_MEMBER`, `CATEGORY_MISMATCH`, `CATEGORY_REQUIRED`, `CODE_INVALID`, `CODE_IN_USE` |
+| `request_correction(session, check_out, note?)` | member | Only for their own auto-closed, uncorrected session; the exit time must be ≤ the auto-close instant |
+| `review_correction(request, approve)` | admin | Approving sets the real `check_out` and clears `credited_minutes` |
+| `set_current_season(season)` | admin | Switches the current season atomically |
+| `kiosk_toggle(code)` | **service role only** | Opens or closes a session. Returns `{ok, action: in/out/noop, name, locale, minutes}`; repeats within 5 s are a `noop` |
+| `kiosk_checkout(member_id)` | **service role only** | Closes an open session from the present grid |
+| `kiosk_present()` | **service role only** | Open sessions: names and check-in times only |
+| `close_stale_sessions(now)` | **service role only** (cron) | Closes sessions that started before the most recent cutoff (ADR 0003) |
+
+Internal helpers with no API grants: `ranking_unchecked`, `member_worked_minutes`, `hash_invite_token`, and the trigger functions (`members_guard`, `season_phases_within_season`, `set_updated_at`, `audit_row`).
+
+### Function privileges
+
+Postgres grants `EXECUTE` on new functions to `PUBLIC`, and a schema-scoped default privilege can't remove that. Migration `20261010000500_function_privileges.sql` therefore revokes everything and grants back an explicit allowlist. `supabase/tests/00_schema_test.sql` compares the functions executable by `anon` and `authenticated` against that allowlist, so CI fails if a new function is exposed by accident. **A migration that adds a function must revoke and grant explicitly, and update the test.**
 
 ## RLS policy matrix
 
 | Table | anon | member (authenticated) | admin |
 |---|---|---|---|
-| `members` | — | select / update own row (only `name`, `code`, `locale`, via column grants) | all |
-| `admins` | — | select own row | all |
+| `members` | — | select / update own row; the `members_guard` trigger allows only `name`, `code`, `locale` | all |
+| `admins` | — | select own row | all, except deleting their own row |
 | `invites` | — | — | all |
 | `sessions` | — | select own | all |
 | `correction_requests` | — | select own, insert via RPC | all |
 | `seasons`, `season_phases` | — | select | all |
-| `audit_log` | — | — | select |
+| `audit_log` | — | — | select (rows are written only by the `audit_row` trigger, for changes made by logged-in users) |
 | `settings` | — | select | all |
 
 Kiosk and cron access bypasses RLS through the service role, but **only** by calling the specific SQL functions above. The service client is never exposed to the browser.
