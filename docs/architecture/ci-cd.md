@@ -38,8 +38,8 @@ flowchart LR
 | File | Trigger | Jobs |
 |---|---|---|
 | `ci.yml` | `pull_request`, `push` to `main` | `quality` (lint, typecheck, unit, i18n key check), `db` (supabase start, db reset, pgTAP), `e2e` (build + Playwright against local Supabase), `docs` (markdownlint, lychee) |
-| `deploy.yml` | `ci.yml` succeeded on `main` (`workflow_run`), or manual | `migrate staging` → `migrate production` → `deploy production` (`vercel pull` → `vercel build --prod` → `vercel deploy --prebuilt --prod`, then a smoke test of `/api/health`). The production jobs run in the GitHub Environment `production`. Migrations run through [`scripts/ci/db-push.sh`](../../scripts/ci/db-push.sh). |
-| `keepalive.yml` | Mondays 12:17 UTC + manual | For staging and prod: `supabase link` + `supabase migration list`, a real DB query so the free projects don't pause. Also runs `curl` on prod `/api/health` (`vars.PRODUCTION_URL`). |
+| `deploy.yml` | `ci.yml` succeeded on `main` (`workflow_run`), or manual | `migrate staging` → `migrate production` → `deploy production` (`vercel pull` → `vercel build --prod` → `vercel deploy --prebuilt --prod`, then a smoke test of `/api/health`). The production jobs run in the GitHub Environment `production`. Migrations run through [`scripts/ci/supabase-db.sh`](../../scripts/ci/supabase-db.sh) `push`. |
+| `keepalive.yml` | Mondays 12:17 UTC + manual | For staging and prod: `supabase migration list` (via `supabase-db.sh ping`), a real DB query so the free projects don't pause. Also runs `curl` on prod `/api/health` (`vars.PRODUCTION_URL`). |
 | Dependabot | weekly | npm and GitHub Actions updates |
 
 **Production deploys are gated on migrations.** Vercel's automatic production deploy from Git is turned **off** (`git.deploymentEnabled.main = false` in `vercel.json`). Production deploys only through `deploy.yml`, after the migrations succeed. Preview deploys stay automatic (Vercel Git integration, Preview env vars = staging).
@@ -68,9 +68,9 @@ Vercel Hobby allows cron jobs at most once per day, which is all we need. Hobby 
 
 | Name | Scope | Notes |
 |---|---|---|
-| `SUPABASE_ACCESS_TOKEN` | GitHub secret | Scoped Supabase token for both projects: Project Settings read, Migrations read/write, Connection Pooling read. Expires yearly; rotate in September ([runbook](../runbooks/rotating-secrets.md)). |
 | `SUPABASE_PROJECT_REF_STAGING`, `SUPABASE_PROJECT_REF_PROD` | GitHub secret | Project refs (not sensitive, but kept next to the passwords) |
-| `SUPABASE_DB_PASSWORD_STAGING`, `SUPABASE_DB_PASSWORD_PROD` | GitHub secret | For `supabase db push` |
+| `SUPABASE_DB_PASSWORD_STAGING`, `SUPABASE_DB_PASSWORD_PROD` | GitHub secret | The only credential CI needs for the database |
+| `SUPABASE_POOLER_HOST` | GitHub **variable** | `aws-1-sa-east-1.pooler.supabase.com` (Session pooler, port 5432). GitHub runners have no IPv6, so they can't use the direct `db.<ref>.supabase.co` host. |
 | `VERCEL_TOKEN` | GitHub secret | Scoped to the **Under Control** Vercel team. Expires yearly. |
 | `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` | GitHub secret | The **Team ID** (`team_…`, not a user ID) and the Project ID (`prj_…`) |
 | `PRODUCTION_URL` | GitHub **variable** | Used by the keep-alive health check |
@@ -78,6 +78,8 @@ Vercel Hobby allows cron jobs at most once per day, which is all we need. Hobby 
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Vercel, type Config | `sb_publishable_…`; public by design, protected by RLS |
 | `SUPABASE_SECRET_KEY` | Vercel, type **Secret** | `sb_secret_…`; maps to the `service_role` Postgres role; server only |
 | `KIOSK_TOKEN`, `CRON_SECRET` | Vercel, type **Secret** | Different values per environment |
+
+**No Supabase access token.** CI talks to Postgres directly with `--db-url` (pooler + DB password) instead of `supabase link`. `link` needs the token to read the project's API keys, including the secret key that bypasses RLS, which would make the CI token far more powerful than migrations require.
 
 ## Release and rollback
 

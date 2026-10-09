@@ -16,7 +16,8 @@
 
 ## Milestone 2 — infra
 
-- [x] T10 — Supabase `uc-attendance-staging` / `uc-attendance-prod` (sa-east-1), Email auth with confirmation off, scoped access token
+- [x] T10 — Supabase `uc-attendance-staging` / `uc-attendance-prod` (sa-east-1), Email auth with confirmation off
+- [x] T10b — CI connects through the session pooler with `--db-url`. No Supabase access token: `link` would need API-key read access.
 - [x] T11 — Vercel project in the Under Control team; Production/Preview env vars (007-AC2)
 - [x] T12 — `vercel.json` disables Git production deploys (007-AC4). The cron entry moves to spec 006 (007-AC6).
 - [x] T13 — `deploy.yml`: migrate staging → prod → `vercel build`/`deploy --prebuilt --prod` → smoke test (007-AC3)

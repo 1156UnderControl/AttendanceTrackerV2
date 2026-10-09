@@ -17,7 +17,7 @@ How the infrastructure was created in October 2026, and how to recreate it. Neve
 3. Authentication → URL Configuration:
    - prod: Site URL `https://attendance-tracker-v2-ten.vercel.app`, plus the redirect URL `https://attendance-tracker-v2-ten.vercel.app/**`
    - staging: the Vercel preview URL wildcard
-4. Account → Access Tokens: create a token with **Project** resource access for both projects, the permissions **Project Settings: Read**, **Migrations: Read & Write** and **Connection Pooling: Read**, and a 1-year expiry.
+4. Note the **Session pooler host** (project → Connect → Direct → Session pooler): `aws-1-sa-east-1.pooler.supabase.com`. CI doesn't need a Supabase access token (see [ci-cd.md](../architecture/ci-cd.md#secrets-and-variables)).
 
 ## 2. Vercel
 
@@ -31,15 +31,19 @@ How the infrastructure was created in October 2026, and how to recreate it. Neve
 Run each command; it prompts for the value without echoing it:
 
 ```bash
-gh secret set SUPABASE_ACCESS_TOKEN
+gh secret set SUPABASE_DB_PASSWORD_STAGING
 ```
 
-The other secrets work the same way: `SUPABASE_PROJECT_REF_STAGING`, `SUPABASE_PROJECT_REF_PROD`, `SUPABASE_DB_PASSWORD_STAGING`, `SUPABASE_DB_PASSWORD_PROD`, `VERCEL_TOKEN`, `VERCEL_ORG_ID` (the **Team ID**), `VERCEL_PROJECT_ID`.
+The other secrets work the same way: `SUPABASE_DB_PASSWORD_PROD`, `SUPABASE_PROJECT_REF_STAGING`, `SUPABASE_PROJECT_REF_PROD`, `VERCEL_TOKEN`, `VERCEL_ORG_ID` (the **Team ID**), `VERCEL_PROJECT_ID`.
 
 The repository variable, the `production` environment and branch protection were set with `gh` (see [ci-cd.md](../architecture/ci-cd.md#branching-and-protection)):
 
 ```bash
 gh variable set PRODUCTION_URL --body https://attendance-tracker-v2-ten.vercel.app
+```
+
+```bash
+gh variable set SUPABASE_POOLER_HOST --body aws-1-sa-east-1.pooler.supabase.com
 ```
 
 ## 4. Verify
