@@ -1,0 +1,26 @@
+# deps
+node_modules/
+.pnpm-store/
+
+# next / vercel
+.next/
+out/
+.vercel/
+
+# env & secrets
+.env
+.env.*
+!.env.example
+
+# supabase
+supabase/.branches/
+supabase/.temp/
+
+# tests
+coverage/
+playwright-report/
+test-results/
+
+# os / editor
+.DS_Store
+*.log
