@@ -14,7 +14,7 @@ This is the single source of truth for how hours, expected hours and percentages
 
 For a session `s` and a window `[a, b)`:
 
-```
+```text
 if s.discarded:                       0
 elif s.credited_minutes is not null:  s.credited_minutes, only if s.check_in ∈ [a, b), else 0
 else:
@@ -30,7 +30,7 @@ else:
 
 For a track T, a season S and an instant `t`, with `d = local date of t`:
 
-```
+```text
 expected_to_date(T, S, t) =
   Σ over phases P of T in S:
     elapsed_days = clamp( (d - P.starts_on) + 1, 0, P.length_days )
@@ -46,7 +46,7 @@ expected_full_season(T, S) = Σ P.weekly_hours × 60 × P.length_days / 7
 
 ## Percentages
 
-```
+```text
 pct_to_date = worked(member, [S.start, now)) / expected_to_date × 100
 pct_season  = worked(member, S)              / expected_full_season × 100
 ```

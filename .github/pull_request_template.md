@@ -1,9 +1,10 @@
 ## What & why
 <!-- Short description. Link the spec: specs/NNN-name/spec.md -->
 
-Spec: 
+Spec:
 
 ## Checklist
+
 - [ ] Spec linked and acceptance criteria covered by tagged tests (`[NNN-ACx]`)
 - [ ] `tasks.md` updated
 - [ ] Migrations added (if schema changed) and `pnpm db:types` run
