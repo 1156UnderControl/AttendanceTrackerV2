@@ -30,8 +30,10 @@ Defined once in `src/app/globals.css` (`@theme`) and used as Tailwind classes.
 - **Shadows:** hard, offset, no blur. Pressing a button moves it into its shadow: `active:translate-x-[3px] active:translate-y-[3px] active:shadow-none`.
 - **Text on yellow is black.** V1 used white on yellow, which fails WCAG contrast (about 1.9:1). V2 keeps the look with black text.
 - **Header:** navy bar, white links with `#111` hover, the TEAM 1156 logo (`public/logo.avif`) on the right. Favicon: `src/app/icon.jpg`.
+- **Language:** two inline-SVG flag buttons (🇧🇷 / 🇺🇸) in the site header and the kiosk header (`LanguageFlags`); the current one is outlined in white, the other dimmed. Not emoji: Windows renders emoji flags as letters.
 - **Forms:** cream inputs with a black border and shadow; the yellow "form card" (`<Card tone="brand">`) for focused tasks such as login and invites.
-- **Tables:** `<Table>`, `<Th>`, `<Tr>`, `<Td>`: sticky yellow header, zebra rows, black box with a hard shadow. Put a title above with `<Section>`, not a card around it.
+- **Tables:** `<Table>`, `<Th>`, `<Tr>`, `<Td>`: sticky yellow header, zebra rows, **centered** headers and cells (as in V1), black box with a hard shadow. Put a title above with `<Section>`, not a card around it.
+- **Dropdowns:** the native arrow is replaced by a bold chevron with 0.75 rem of space before the border (global `select` rule in `globals.css`).
 - **Light only:** no `dark:` classes. `color-scheme: light` is set globally.
 
 ## Components (`src/components/ui.tsx`)

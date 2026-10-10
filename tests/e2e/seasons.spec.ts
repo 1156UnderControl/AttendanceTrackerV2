@@ -26,7 +26,11 @@ async function addPhase(page: Page, name: string, startsOn: string, endsOn: stri
 }
 
 test.describe("seasons and phases", () => {
+  // Clean up before and after, so test seasons never linger in a dev database.
   test.beforeEach(async () => {
+    await db.from("seasons").delete().like("name", "E2E %");
+  });
+  test.afterEach(async () => {
     await db.from("seasons").delete().like("name", "E2E %");
   });
 

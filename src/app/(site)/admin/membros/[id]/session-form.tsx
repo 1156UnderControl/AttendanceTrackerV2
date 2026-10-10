@@ -24,7 +24,7 @@ export function SessionForm({
   return (
     <form
       action={action}
-      className="flex flex-wrap items-end gap-2"
+      className={`flex flex-wrap items-end gap-2 ${sessionId ? "justify-center" : ""}`}
       data-testid={sessionId ? "session-form" : "new-session-form"}
     >
       <input type="hidden" name="memberId" value={memberId} />

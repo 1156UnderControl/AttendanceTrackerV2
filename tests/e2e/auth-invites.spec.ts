@@ -110,14 +110,14 @@ test.describe("my attendance", () => {
   }) => {
     const email = "admin@local.test";
     await devLogin(page, email);
-    await page.getByLabel("Idioma").first().selectOption("en");
+    await page.getByRole("button", { name: "English" }).click();
     await expect(page.getByRole("heading", { name: "My attendance" })).toBeVisible();
 
     const context = await browser.newContext({ locale: "pt-BR" });
     const other = await context.newPage();
     await devLogin(other, email);
     await expect(other.getByRole("heading", { name: "My attendance" })).toBeVisible();
-    await other.getByLabel("Language").first().selectOption("pt-BR");
+    await other.getByRole("button", { name: "Português" }).click();
     await expect(other.getByRole("heading", { name: "Minha presença" })).toBeVisible();
     await context.close();
   });
