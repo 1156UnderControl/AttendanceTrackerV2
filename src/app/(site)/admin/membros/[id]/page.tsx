@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getFormatter, getNow, getTranslations } from "next-intl/server";
-import { Button, Card, PageTitle, Section, Table, Td, Th, Tr } from "@/components/ui";
-import { discardSession } from "@/app/(site)/admin/sessoes/actions";
+import { Button, Card, inputClass, PageTitle, Section, Table, Td, Th, Tr } from "@/components/ui";
+import { discardSession, saveSession } from "@/app/(site)/admin/sessoes/actions";
+import { ActionForm, SubmitButton } from "@/components/action-form";
 import { MemberCharts } from "@/components/charts/member-charts";
 import { loadMemberSeries } from "@/lib/attendance/load-series";
 import { toLocalInput } from "@/lib/attendance/local-input";
@@ -83,9 +84,9 @@ export default async function EditMemberPage({ params }: PageProps<"/admin/membr
             <thead>
               <tr>
                 <Th>{t("me.date")}</Th>
-                <Th>
-                  {t("admin.memberSessions.checkIn")} / {t("admin.memberSessions.checkOut")}
-                </Th>
+                <Th>{t("admin.memberSessions.checkIn")}</Th>
+                <Th>{t("admin.memberSessions.checkOut")}</Th>
+                <Th />
                 <Th />
               </tr>
             </thead>
@@ -105,13 +106,42 @@ export default async function EditMemberPage({ params }: PageProps<"/admin/membr
                       </p>
                     )}
                   </Td>
+                  {/* The form lives in the "Salvar" cell; inputs join it with form="…". */}
                   <Td>
-                    <SessionForm
-                      memberId={member.id}
-                      sessionId={s.id}
-                      checkIn={toLocalInput(s.check_in)}
-                      checkOut={s.check_out ? toLocalInput(s.check_out) : ""}
+                    <input
+                      form={`session-${s.id}`}
+                      type="datetime-local"
+                      name="checkIn"
+                      aria-label={t("admin.memberSessions.checkIn")}
+                      required
+                      defaultValue={toLocalInput(s.check_in)}
+                      className={inputClass}
                     />
+                  </Td>
+                  <Td>
+                    <input
+                      form={`session-${s.id}`}
+                      type="datetime-local"
+                      name="checkOut"
+                      aria-label={t("admin.memberSessions.checkOut")}
+                      required
+                      defaultValue={s.check_out ? toLocalInput(s.check_out) : ""}
+                      className={inputClass}
+                    />
+                  </Td>
+                  <Td>
+                    <ActionForm
+                      id={`session-${s.id}`}
+                      action={saveSession}
+                      successMessage={t("admin.memberSessions.saved")}
+                      testId="session-form"
+                    >
+                      <input type="hidden" name="memberId" value={member.id} />
+                      <input type="hidden" name="sessionId" value={s.id} />
+                      <SubmitButton variant="secondary">
+                        {t("admin.memberSessions.save")}
+                      </SubmitButton>
+                    </ActionForm>
                   </Td>
                   <Td>
                     <form action={discardSession}>
