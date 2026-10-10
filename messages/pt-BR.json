@@ -19,7 +19,8 @@
     "admin": "Admin",
     "dashboard": "Painel",
     "members": "Membros",
-    "invites": "Convites"
+    "invites": "Convites",
+    "kiosk": "Quiosque"
   },
   "labels": {
     "student": "Aluno(a)",
@@ -181,5 +182,34 @@
     "storage": "Os dados são armazenados no Supabase (banco de dados, região São Paulo) e o site é hospedado na Vercel. O login é feito pelo Google.",
     "rightsTitle": "Seus direitos",
     "rights": "Você pode ver e corrigir seu nome, código e idioma na página Minha presença. Para pedir a exclusão da sua conta e dos seus dados, fale com um mentor ou administrador da equipe."
+  },
+  "kiosk": {
+    "codeLabel": "CÓDIGO",
+    "placeholder": "DIGITE SEU CÓDIGO",
+    "submit": "BATER PONTO",
+    "presentTitle": "Pessoas no laboratório agora:",
+    "nobody": "Ninguém no laboratório no momento.",
+    "welcome": "Bem-vindo(a), {name}!",
+    "goodbye": "Até logo, {name}! {duration} hoje.",
+    "duration": "{hours}h {minutes}min",
+    "elapsed": "{hours}h {minutes}min",
+    "notFound": "Código não encontrado.",
+    "offline": "Sem conexão, tente novamente.",
+    "confirmTitle": "Registrar saída",
+    "confirmBody": "Registrar a saída de {name}?",
+    "confirm": "Sim, registrar saída",
+    "cancel": "Cancelar",
+    "filter": "Buscar nome",
+    "unauthorizedTitle": "Quiosque não autorizado",
+    "unauthorizedBody": "Este computador ainda não foi ativado. Peça a um admin para ativá-lo em /kiosk/unlock."
+  },
+  "kioskUnlock": {
+    "title": "Ativar quiosque",
+    "body": "Transforma este navegador no quiosque do laboratório: qualquer pessoa poderá bater ponto com o código, sem login. Use apenas no computador do laboratório.",
+    "language": "Idioma padrão do quiosque",
+    "activate": "Ativar este computador como quiosque",
+    "active": "Este computador já está ativado como quiosque.",
+    "open": "Abrir o quiosque",
+    "deactivate": "Desativar quiosque neste computador"
   }
 }

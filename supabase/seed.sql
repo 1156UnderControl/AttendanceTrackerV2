@@ -45,6 +45,8 @@ insert into public.admins (user_id) values ('a0000000-0000-0000-0000-0000000000a
 insert into public.members (user_id, name, code, type, category) values
   ('a0000000-0000-0000-0000-0000000000ad', 'Admin Local', '999001', 'mentor', 'FRC');
 update public.members set user_id = 'a0000000-0000-0000-0000-0000000000a1' where code = '111111';
+-- Carla prefers English: the kiosk greets her in English even when it is in Portuguese (001-AC10).
+update public.members set locale = 'en' where code = '222221';
 
 -- A few past sessions so "Minha presença" and the rankings have data (local São Paulo times).
 insert into public.sessions (member_id, check_in, check_out)

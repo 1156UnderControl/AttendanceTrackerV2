@@ -12,7 +12,14 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : "list",
   // Browsers default to a Brazilian locale, like the lab PC. Tests override it when needed.
-  use: { baseURL, locale: "pt-BR", timezoneId: "America/Sao_Paulo", trace: "retain-on-failure" },
+  use: {
+    baseURL,
+    locale: "pt-BR",
+    timezoneId: "America/Sao_Paulo",
+    // Floating kiosk bubbles never settle; reduced motion turns animations off (and tests that path).
+    contextOptions: { reducedMotion: "reduce" },
+    trace: "retain-on-failure",
+  },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {
     // CI runs against the production build; locally reuse `pnpm dev` if it's running.

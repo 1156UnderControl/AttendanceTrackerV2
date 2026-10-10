@@ -28,7 +28,8 @@
 - At `/kiosk/unlock`, a logged-in admin clicks "Ativar este computador como quiosque". The server sets the cookie `kiosk_token=<KIOSK_TOKEN>` (httpOnly, Secure, SameSite=Strict, 1 year). The admin also picks the kiosk's default language, which sets the `locale` cookie.
 - Kiosk server actions compare the cookie to `KIOSK_TOKEN` in constant time, then call the kiosk RPCs with the service-role client.
 - Rotating `KIOSK_TOKEN` revokes every kiosk; an admin then re-unlocks the lab PC.
-- Rate limiting: kiosk actions are limited to about 30/minute per device. Codes are 6 digits, so brute force from the kiosk itself is not a realistic threat model.
+- No rate limiting: Vercel Hobby has no shared store to count requests across serverless instances. Kiosk actions only work with the device cookie, so they can't be called from outside the lab. Guessing a 6-digit code at the lab PC is an accepted risk, the same as V1.
+- The kiosk page always uses its own language (the `locale` cookie set at unlock), even if an admin is still signed in on that browser. The language toggle only changes that cookie, never a member profile.
 
 ## Sessions in Next.js
 

@@ -1,6 +1,6 @@
 # 001 — Kiosk check-in/out
 
-- Status: Approved
+- Status: Implemented
 - Requirements: FR-1.1 – FR-1.5
 - Related ADRs: [0005](../../docs/adr/0005-kiosk-device-token.md)
 

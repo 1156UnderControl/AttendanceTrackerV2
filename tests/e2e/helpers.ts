@@ -15,3 +15,28 @@ export function uniqueEmail(prefix: string) {
 export function uniqueCode() {
   return String(Math.floor(400000 + Math.random() * 500000));
 }
+
+/** Signs in as the seeded admin and activates this browser context as the kiosk. */
+export async function unlockKiosk(page: Page, locale: "pt-BR" | "en" = "pt-BR") {
+  await devLogin(page, "admin@local.test", "/kiosk/unlock");
+  await page.locator('select[name="locale"]').selectOption(locale);
+  await page.locator('form:has(select[name="locale"]) button[type="submit"]').click();
+  await expect(page).toHaveURL(/\/kiosk$/);
+}
+
+/** Types a code at the kiosk and submits it. */
+export async function enterCode(page: Page, code: string) {
+  const input = page.locator('input[name="code"]');
+  await input.fill(code);
+  await input.press("Enter");
+}
+
+/** Makes sure a member is not checked in, so tests can run repeatedly on one database. */
+export async function ensureCheckedOut(page: Page, name: string) {
+  const bubble = page.getByTestId("present-bubble").filter({ hasText: name });
+  if (await bubble.count()) {
+    await bubble.click();
+    await page.getByRole("dialog").getByRole("button").last().click();
+    await expect(bubble).toHaveCount(0);
+  }
+}
