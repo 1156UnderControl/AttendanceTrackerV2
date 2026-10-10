@@ -114,6 +114,10 @@ test.describe("auto-close and corrections", () => {
     await expect(form).toContainText("Esta sessão se sobrepõe a outra do mesmo membro.");
 
     await row.getByRole("button", { name: "Descartar" }).click();
+    await page
+      .getByRole("dialog", { name: "Descartar sessão?" })
+      .getByRole("button", { name: "Descartar" })
+      .click();
     await expect(row).toHaveCount(0);
 
     await page.goto("/admin/auditoria");

@@ -132,3 +132,44 @@ export function Section({ title, children }: { title?: ReactNode; children: Reac
     </section>
   );
 }
+
+/**
+ * A status tag ("Atual"). Flat on purpose: only buttons carry the hard shadow,
+ * so a tag never looks clickable.
+ */
+export function Badge({
+  children,
+  tone = "brand",
+}: {
+  children: ReactNode;
+  tone?: "brand" | "neutral";
+}) {
+  return (
+    <span
+      className={`inline-flex items-center rounded-full border-2 border-ink px-3 py-0.5 text-sm font-bold ${tone === "brand" ? "bg-brand" : "bg-paper"}`}
+    >
+      {children}
+    </span>
+  );
+}
+
+/** Destructive actions live apart from everyday ones, at the bottom of the page. */
+export function DangerZone({
+  title,
+  description,
+  children,
+}: {
+  title: ReactNode;
+  description: ReactNode;
+  children: ReactNode;
+}) {
+  return (
+    <section className="flex flex-wrap items-center justify-between gap-4 rounded-brutal border-2 border-danger bg-white p-4 sm:p-5">
+      <div>
+        <h2 className="text-lg font-black text-danger">{title}</h2>
+        <p className="text-sm">{description}</p>
+      </div>
+      {children}
+    </section>
+  );
+}

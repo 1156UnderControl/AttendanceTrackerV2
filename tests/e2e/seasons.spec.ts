@@ -95,6 +95,10 @@ test.describe("seasons and phases", () => {
     await seasonForm.getByRole("button", { name: "Salvar" }).click();
     await expect(seasonForm).toContainText("Algumas fases ficariam fora das novas datas");
     await page.getByRole("button", { name: "Excluir temporada" }).click();
+    // Destructive actions ask first.
+    const confirm = page.getByRole("dialog", { name: "Excluir temporada?" });
+    await expect(confirm).toContainText(SECOND);
+    await confirm.getByRole("button", { name: "Excluir temporada" }).click();
     await expect(page).toHaveURL(/\/admin\/temporadas$/);
     await expect(page.getByTestId("season-row").filter({ hasText: SECOND })).toHaveCount(0);
   });

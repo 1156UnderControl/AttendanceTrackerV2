@@ -35,6 +35,10 @@ Defined once in `src/app/globals.css` (`@theme`) and used as Tailwind classes.
 - **Tables:** `<Table>`, `<Th>`, `<Tr>`, `<Td>`: sticky yellow header, zebra rows, **centered** headers and cells (as in V1), black box with a hard shadow.
 - **Editable tables** (phases, sessions): field names are column headers, never repeated per row. Each row's inputs sit in their own cells and join the row's form, which lives in the "Salvar" cell, through the `form="…"` attribute (a form can't span cells; `ActionForm` takes an `id`). Inputs get an `aria-label` with the column name. Put a title above with `<Section>`, not a card around it.
 - **Dropdowns:** the native arrow is replaced by a bold chevron with 0.75 rem of space before the border (global `select` rule in `globals.css`).
+- **Tags vs buttons:** only buttons carry the hard shadow. Statuses ("Atual") use the flat, rounded `Badge`, so they never look clickable.
+- **Page header:** the title with the item's status next to it (a `Badge`, or the action that changes it, e.g. "Tornar atual").
+- **Forms in cards:** one job per card (e.g. "Dados da temporada"), fields in a grid that uses the width, the submit button at the bottom right.
+- **Destructive actions** (delete, discard, revoke, remove access, deactivate) always confirm in a dialog (`ConfirmSubmit`, native `<dialog>`). Whole-object deletes live in a red-bordered `DangerZone` at the bottom of the page, away from everyday buttons.
 - **Light only:** no `dark:` classes. `color-scheme: light` is set globally.
 
 ## Phones (below Tailwind's `sm`, 640 px)
