@@ -84,8 +84,9 @@ export function Alert({
   );
 }
 
+// No margin: pages space their children with flex gaps, so a margin would double it.
 export function PageTitle({ children }: { children: ReactNode }) {
-  return <h1 className="mb-4 text-2xl font-black sm:mb-6 sm:text-3xl">{children}</h1>;
+  return <h1 className="text-2xl font-black sm:text-3xl">{children}</h1>;
 }
 
 /** V1 "styled-table": bordered box with a hard shadow, sticky yellow header, zebra rows, centered cells. */
