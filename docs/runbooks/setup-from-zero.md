@@ -15,7 +15,7 @@ How the infrastructure was created in October 2026, and how to recreate it. Neve
    - Security options: **Enable Data API** on; **Automatically expose new tables** **off**; **Enable automatic RLS** on. See [data-model.md](../architecture/data-model.md#exposure-and-rls-defaults).
 2. Authentication → Sign In / Providers: **Email off** and **Google on** (ADR 0008), with the client ID and secret from [section 1b](#1b-google-oauth-client).
 3. Authentication → URL Configuration:
-   - prod: Site URL `https://attendance-tracker-v2-ten.vercel.app`, plus the redirect URL `https://attendance-tracker-v2-ten.vercel.app/**`
+   - prod: Site URL `https://1156-attendance.vercel.app`, plus the redirect URL `https://1156-attendance.vercel.app/**`
    - staging: the Vercel preview URL wildcard
 4. Note the **Session pooler host** (project → Connect → Direct → Session pooler): `aws-1-sa-east-1.pooler.supabase.com`. CI doesn't need a Supabase access token (see [ci-cd.md](../architecture/ci-cd.md#secrets-and-variables)).
 
@@ -25,12 +25,12 @@ One OAuth client serves both Supabase projects.
 
 1. <https://console.cloud.google.com> → create a project named `UC Attendance`.
 2. **Google Auth Platform → Branding** (the OAuth consent screen): set the app name to "Under Control Attendance", add a support email, and choose audience **External**. Publishing also requires:
-   - **App home page:** `https://attendance-tracker-v2-ten.vercel.app`
-   - **Privacy policy:** `https://attendance-tracker-v2-ten.vercel.app/privacidade` (a public page in the app)
-   - **Authorized domains:** `attendance-tracker-v2-ten.vercel.app`, `xnhrsudlvgeglesmhezc.supabase.co`, `tgpsavnhvhovlhdznasu.supabase.co`
+   - **App home page:** `https://1156-attendance.vercel.app`
+   - **Privacy policy:** `https://1156-attendance.vercel.app/privacidade` (a public page in the app)
+   - **Authorized domains:** `1156-attendance.vercel.app`, `xnhrsudlvgeglesmhezc.supabase.co`, `tgpsavnhvhovlhdznasu.supabase.co`
 3. **Audience → Publish app** ("In production"). In "Testing" mode only listed test users can sign in, and their sessions expire after 7 days. The basic scopes (`openid`, `email`, `profile`) need no Google verification.
 4. **Clients → Create client → Web application**, named `Supabase`:
-   - **Authorized JavaScript origins:** `https://attendance-tracker-v2-ten.vercel.app`
+   - **Authorized JavaScript origins:** `https://1156-attendance.vercel.app`
    - **Authorized redirect URIs:**
      - `https://xnhrsudlvgeglesmhezc.supabase.co/auth/v1/callback` (prod)
      - `https://tgpsavnhvhovlhdznasu.supabase.co/auth/v1/callback` (staging)
@@ -41,6 +41,7 @@ One OAuth client serves both Supabase projects.
 
 1. Sign up on **Hobby** with GitHub, and install the Vercel GitHub App on the `1156UnderControl` org (an org owner must approve).
 2. Import `1156UnderControl/AttendanceTrackerV2` into the **Under Control** team, with the project name `attendance-tracker-v2`, the Next.js preset, and no build overrides.
+   - Production domain: **`1156-attendance.vercel.app`** (Settings → Domains). The original `attendance-tracker-v2-ten.vercel.app` redirects to it (308). If the domain changes, update the Supabase prod URL Configuration, the Google OAuth origin and Branding URLs, and the `PRODUCTION_URL` variable, then unlock the lab kiosk again (its cookie belongs to the domain).
 3. Settings → Environment Variables: add each variable twice, once for Production (prod values) and once for Preview (staging values). Names, types and notes are listed in [ci-cd.md](../architecture/ci-cd.md#secrets-and-variables).
 4. Account → Tokens: create a token scoped to the **Under Control** team, with a 1-year expiry.
 
@@ -57,7 +58,7 @@ The other secrets work the same way: `SUPABASE_DB_PASSWORD_PROD`, `SUPABASE_PROJ
 The repository variable, the `production` environment and branch protection were set with `gh` (see [ci-cd.md](../architecture/ci-cd.md#branching-and-protection)):
 
 ```bash
-gh variable set PRODUCTION_URL --body https://attendance-tracker-v2-ten.vercel.app
+gh variable set PRODUCTION_URL --body https://1156-attendance.vercel.app
 ```
 
 ```bash
