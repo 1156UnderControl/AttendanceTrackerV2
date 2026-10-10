@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { ActionForm, SubmitButton } from "@/components/action-form";
 import {
+  Badge,
   Button,
   Card,
   Field,
@@ -76,9 +77,7 @@ export default async function SeasonsPage() {
                   <Td>{date(s.ends_on)}</Td>
                   <Td>
                     {s.is_current ? (
-                      <span className="rounded-brutal border-2 border-ink bg-brand px-2 py-1 font-bold">
-                        {t("current")}
-                      </span>
+                      <Badge>{t("current")}</Badge>
                     ) : (
                       <form action={makeCurrent}>
                         <input type="hidden" name="id" value={s.id} />

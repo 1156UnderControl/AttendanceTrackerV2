@@ -2,9 +2,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getFormatter, getNow, getTranslations } from "next-intl/server";
 import { ActionForm, SubmitButton } from "@/components/action-form";
+import { ConfirmSubmit } from "@/components/confirm-submit";
 import {
+  Badge,
   Button,
   Card,
+  DangerZone,
   Field,
   inputClass,
   PageTitle,
@@ -58,66 +61,62 @@ export default async function SeasonPage({
       <Link href="/admin/temporadas" className="font-bold">
         ← {t("common.back")}
       </Link>
-      <PageTitle>{t("admin.seasons.editTitle", { name: season.name })}</PageTitle>
+      {/* Header: the season's status sits next to its name. */}
+      <div className="flex flex-wrap items-center gap-3">
+        <PageTitle>{t("admin.seasons.editTitle", { name: season.name })}</PageTitle>
+        {season.is_current ? (
+          <Badge>{t("admin.seasons.current")}</Badge>
+        ) : (
+          <form action={makeCurrent}>
+            <input type="hidden" name="id" value={season.id} />
+            <Button type="submit" variant="secondary" className="px-3 py-1">
+              {t("admin.seasons.makeCurrent")}
+            </Button>
+          </form>
+        )}
+      </div>
 
-      <Card>
+      <Card title={t("admin.seasons.detailsTitle")}>
         <ActionForm
           action={updateSeason}
           successMessage={t("admin.seasons.saved")}
-          className="flex flex-wrap items-end gap-3"
+          className="flex flex-col gap-4"
           testId="season-form"
         >
           <input type="hidden" name="id" value={season.id} />
-          <Field label={t("admin.seasons.name")}>
-            <input
-              name="name"
-              required
-              maxLength={40}
-              defaultValue={season.name}
-              className={inputClass}
-            />
-          </Field>
-          <Field label={t("admin.seasons.startsOn")}>
-            <input
-              name="startsOn"
-              type="date"
-              required
-              defaultValue={season.starts_on}
-              className={inputClass}
-            />
-          </Field>
-          <Field label={t("admin.seasons.endsOn")}>
-            <input
-              name="endsOn"
-              type="date"
-              required
-              defaultValue={season.ends_on}
-              className={inputClass}
-            />
-          </Field>
-          <SubmitButton variant="secondary">{t("admin.seasons.save")}</SubmitButton>
+          <div className="grid gap-4 sm:grid-cols-3">
+            <Field label={t("admin.seasons.name")}>
+              <input
+                name="name"
+                required
+                maxLength={40}
+                defaultValue={season.name}
+                className={inputClass}
+              />
+            </Field>
+            <Field label={t("admin.seasons.startsOn")}>
+              <input
+                name="startsOn"
+                type="date"
+                required
+                defaultValue={season.starts_on}
+                className={inputClass}
+              />
+            </Field>
+            <Field label={t("admin.seasons.endsOn")}>
+              <input
+                name="endsOn"
+                type="date"
+                required
+                defaultValue={season.ends_on}
+                className={inputClass}
+              />
+            </Field>
+          </div>
+          <div className="flex justify-end">
+            <SubmitButton>{t("admin.seasons.save")}</SubmitButton>
+          </div>
         </ActionForm>
-        <div className="mt-4 flex flex-wrap items-center gap-3">
-          {season.is_current ? (
-            <span className="rounded-brutal border-2 border-ink bg-brand px-2 py-1 font-bold">
-              {t("admin.seasons.current")}
-            </span>
-          ) : (
-            <form action={makeCurrent}>
-              <input type="hidden" name="id" value={season.id} />
-              <Button type="submit" variant="secondary">
-                {t("admin.seasons.makeCurrent")}
-              </Button>
-            </form>
-          )}
-          <form action={deleteSeason}>
-            <input type="hidden" name="id" value={season.id} />
-            <Button type="submit" variant="danger">
-              {t("admin.seasons.delete")}
-            </Button>
-          </form>
-          <span className="text-sm">{t("admin.seasons.deleteHint")}</span>
-        </div>
       </Card>
 
       {/* 003-AC2: one tab per track */}
@@ -208,9 +207,15 @@ export default async function SeasonPage({
                     <form action={deletePhase}>
                       <input type="hidden" name="phaseId" value={p.id} />
                       <input type="hidden" name="seasonId" value={season.id} />
-                      <Button type="submit" variant="danger" className="px-3 py-1">
+                      <ConfirmSubmit
+                        title={t("admin.seasons.deletePhaseConfirmTitle")}
+                        message={t("admin.seasons.deletePhaseConfirm", { name: p.name })}
+                        confirmLabel={t("admin.seasons.deletePhase")}
+                        cancelLabel={t("common.cancel")}
+                        className="px-3 py-1"
+                      >
                         {t("admin.seasons.deletePhase")}
-                      </Button>
+                      </ConfirmSubmit>
                     </form>
                   </Td>
                 </Tr>
@@ -222,6 +227,20 @@ export default async function SeasonPage({
           <PhaseFields seasonId={season.id} track={track} bounds={dateBounds} />
         </Card>
       </Section>
+
+      <DangerZone title={t("admin.seasons.delete")} description={t("admin.seasons.deleteHint")}>
+        <form action={deleteSeason}>
+          <input type="hidden" name="id" value={season.id} />
+          <ConfirmSubmit
+            title={t("admin.seasons.deleteConfirmTitle")}
+            message={t("admin.seasons.deleteConfirm", { name: season.name })}
+            confirmLabel={t("admin.seasons.delete")}
+            cancelLabel={t("common.cancel")}
+          >
+            {t("admin.seasons.delete")}
+          </ConfirmSubmit>
+        </form>
+      </DangerZone>
     </>
   );
 }

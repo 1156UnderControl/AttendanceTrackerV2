@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
+import { ConfirmSubmit } from "@/components/confirm-submit";
 import { Button, Card, Field, inputClass } from "@/components/ui";
 import { locales } from "@/i18n/config";
 import { requireAdmin, requireUser } from "@/lib/auth/session";
@@ -31,9 +32,14 @@ export default async function KioskUnlockPage() {
                   {t("kioskUnlock.open")}
                 </Link>
                 <form action={lockKiosk}>
-                  <Button type="submit" variant="danger">
+                  <ConfirmSubmit
+                    title={t("kioskUnlock.deactivateConfirmTitle")}
+                    message={t("kioskUnlock.deactivateConfirm")}
+                    confirmLabel={t("kioskUnlock.deactivate")}
+                    cancelLabel={t("common.cancel")}
+                  >
                     {t("kioskUnlock.deactivate")}
-                  </Button>
+                  </ConfirmSubmit>
                 </form>
               </div>
             </>

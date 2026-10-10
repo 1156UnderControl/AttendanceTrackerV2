@@ -12,7 +12,8 @@
     "hours": "{value} h",
     "empty": "—",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "cancel": "Cancel"
   },
   "nav": {
     "myAttendance": "My attendance",
@@ -163,7 +164,9 @@
       "revoked": "Revoked",
       "usedUp": "Used up",
       "revoke": "Revoke",
-      "none": "No invites yet."
+      "none": "No invites yet.",
+      "revokeConfirmTitle": "Revoke invite?",
+      "revokeConfirm": "The link stops working for anyone who hasn't joined yet."
     },
     "members": {
       "title": "Members",
@@ -186,7 +189,9 @@
       "removeAdmin": "Remove admin",
       "ownAdminHint": "You can't remove your own admin access.",
       "noAccount": "This member has no linked account.",
-      "none": "No members found."
+      "none": "No members found.",
+      "removeAdminConfirmTitle": "Remove admin access?",
+      "removeAdminConfirm": "{name} will no longer see the dashboard or manage the team."
     },
     "sessions": {
       "title": "Sessions",
@@ -215,7 +220,9 @@
       "none": "No sessions.",
       "autoClosed": "Auto-closed",
       "open": "In progress",
-      "hint": "São Paulo times. Saving an exit makes the session count its real duration."
+      "hint": "São Paulo times. Saving an exit makes the session count its real duration.",
+      "discardConfirmTitle": "Discard session?",
+      "discardConfirm": "This session stops counting toward hours. It stays in the audit log."
     },
     "audit": {
       "title": "Audit log",
@@ -247,7 +254,7 @@
       "save": "Save",
       "saved": "Saved.",
       "delete": "Delete season",
-      "deleteHint": "Deleting removes this season's phases. Attendance sessions are not affected.",
+      "deleteHint": "Removes this season's phases. Attendance sessions are not affected.",
       "phasesTitle": "Phases",
       "phaseName": "Phase name",
       "weeklyHours": "Hours/week",
@@ -261,7 +268,12 @@
       "copyFromTrack": "Copy from {track}",
       "copyFromPrevious": "Copy from the previous season (same group, dates +1 year)",
       "templateFrc": "Fill with the FRC template (8 h, 60 h, 42 h/week)",
-      "copyHint": "Only works on an empty group. Then adjust dates such as kickoff."
+      "copyHint": "Only works on an empty group. Then adjust dates such as kickoff.",
+      "detailsTitle": "Season details",
+      "deleteConfirmTitle": "Delete season?",
+      "deleteConfirm": "Season {name} and all its phases will be removed. Attendance sessions stay.",
+      "deletePhaseConfirmTitle": "Delete phase?",
+      "deletePhaseConfirm": "Phase {name} will be removed and expected hours recalculated."
     },
     "dashboard": {
       "title": "Dashboard",
@@ -341,7 +353,9 @@
     "activate": "Activate this computer as the kiosk",
     "active": "This computer is already activated as the kiosk.",
     "open": "Open the kiosk",
-    "deactivate": "Deactivate the kiosk on this computer"
+    "deactivate": "Deactivate the kiosk on this computer",
+    "deactivateConfirmTitle": "Deactivate kiosk?",
+    "deactivateConfirm": "This computer stops recording attendance until it's activated again."
   },
   "charts": {
     "weeklyTitle": "Hours per week",

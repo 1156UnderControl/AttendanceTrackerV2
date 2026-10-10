@@ -1,5 +1,6 @@
 import { getFormatter, getNow, getTranslations } from "next-intl/server";
-import { Button, Card, PageTitle, Section, Table, Td, Th, Tr } from "@/components/ui";
+import { ConfirmSubmit } from "@/components/confirm-submit";
+import { Card, PageTitle, Section, Table, Td, Th, Tr } from "@/components/ui";
 import { createClient } from "@/lib/supabase/server";
 import { revokeInvite } from "./actions";
 import { CreateInviteForm } from "./create-invite-form";
@@ -64,9 +65,15 @@ export default async function InvitesPage() {
                       {s === "active" && (
                         <form action={revokeInvite}>
                           <input type="hidden" name="id" value={invite.id} />
-                          <Button type="submit" variant="danger" className="px-2 py-1">
+                          <ConfirmSubmit
+                            title={t("admin.invites.revokeConfirmTitle")}
+                            message={t("admin.invites.revokeConfirm")}
+                            confirmLabel={t("admin.invites.revoke")}
+                            cancelLabel={t("common.cancel")}
+                            className="px-2 py-1"
+                          >
                             {t("admin.invites.revoke")}
-                          </Button>
+                          </ConfirmSubmit>
                         </form>
                       )}
                     </Td>

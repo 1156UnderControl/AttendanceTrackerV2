@@ -4,6 +4,7 @@ import { getFormatter, getNow, getTranslations } from "next-intl/server";
 import { Button, Card, inputClass, PageTitle, Section, Table, Td, Th, Tr } from "@/components/ui";
 import { discardSession, saveSession } from "@/app/(site)/admin/sessoes/actions";
 import { ActionForm, SubmitButton } from "@/components/action-form";
+import { ConfirmSubmit } from "@/components/confirm-submit";
 import { MemberCharts } from "@/components/charts/member-charts";
 import { loadMemberSeries } from "@/lib/attendance/load-series";
 import { toLocalInput } from "@/lib/attendance/local-input";
@@ -63,9 +64,21 @@ export default async function EditMemberPage({ params }: PageProps<"/admin/membr
             <input type="hidden" name="userId" value={member.user_id} />
             <input type="hidden" name="makeAdmin" value={adminRow ? "false" : "true"} />
             <div>
-              <Button type="submit" variant={adminRow ? "danger" : "secondary"} disabled={isSelf}>
-                {adminRow ? t("admin.members.removeAdmin") : t("admin.members.makeAdmin")}
-              </Button>
+              {adminRow ? (
+                <ConfirmSubmit
+                  title={t("admin.members.removeAdminConfirmTitle")}
+                  message={t("admin.members.removeAdminConfirm", { name: member.name })}
+                  confirmLabel={t("admin.members.removeAdmin")}
+                  cancelLabel={t("common.cancel")}
+                  disabled={isSelf}
+                >
+                  {t("admin.members.removeAdmin")}
+                </ConfirmSubmit>
+              ) : (
+                <Button type="submit" variant="secondary">
+                  {t("admin.members.makeAdmin")}
+                </Button>
+              )}
             </div>
             {isSelf && <p className="text-xs opacity-70">{t("admin.members.ownAdminHint")}</p>}
           </form>
@@ -147,9 +160,15 @@ export default async function EditMemberPage({ params }: PageProps<"/admin/membr
                     <form action={discardSession}>
                       <input type="hidden" name="sessionId" value={s.id} />
                       <input type="hidden" name="memberId" value={member.id} />
-                      <Button type="submit" variant="danger" className="px-3 py-1">
+                      <ConfirmSubmit
+                        title={t("admin.memberSessions.discardConfirmTitle")}
+                        message={t("admin.memberSessions.discardConfirm")}
+                        confirmLabel={t("admin.memberSessions.discard")}
+                        cancelLabel={t("common.cancel")}
+                        className="px-3 py-1"
+                      >
                         {t("admin.memberSessions.discard")}
-                      </Button>
+                      </ConfirmSubmit>
                     </form>
                   </Td>
                 </Tr>

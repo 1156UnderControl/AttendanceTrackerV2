@@ -12,7 +12,8 @@
     "hours": "{value} h",
     "empty": "—",
     "yes": "Sim",
-    "no": "Não"
+    "no": "Não",
+    "cancel": "Cancelar"
   },
   "nav": {
     "myAttendance": "Minha presença",
@@ -163,7 +164,9 @@
       "revoked": "Revogado",
       "usedUp": "Esgotado",
       "revoke": "Revogar",
-      "none": "Nenhum convite ainda."
+      "none": "Nenhum convite ainda.",
+      "revokeConfirmTitle": "Revogar convite?",
+      "revokeConfirm": "O link deixa de funcionar para quem ainda não entrou."
     },
     "members": {
       "title": "Membros",
@@ -186,7 +189,9 @@
       "removeAdmin": "Remover admin",
       "ownAdminHint": "Você não pode remover seu próprio acesso de admin.",
       "noAccount": "Este membro não tem conta vinculada.",
-      "none": "Nenhum membro encontrado."
+      "none": "Nenhum membro encontrado.",
+      "removeAdminConfirmTitle": "Remover acesso de admin?",
+      "removeAdminConfirm": "{name} deixa de ver o painel e de gerenciar a equipe."
     },
     "sessions": {
       "title": "Sessões",
@@ -215,7 +220,9 @@
       "none": "Nenhuma sessão.",
       "autoClosed": "Fechada automaticamente",
       "open": "Em andamento",
-      "hint": "Horários de São Paulo. Ao salvar uma saída, a sessão passa a contar a duração real."
+      "hint": "Horários de São Paulo. Ao salvar uma saída, a sessão passa a contar a duração real.",
+      "discardConfirmTitle": "Descartar sessão?",
+      "discardConfirm": "Esta sessão deixa de contar nas horas. Ela continua registrada na auditoria."
     },
     "audit": {
       "title": "Auditoria",
@@ -247,7 +254,7 @@
       "save": "Salvar",
       "saved": "Salvo.",
       "delete": "Excluir temporada",
-      "deleteHint": "Excluir remove as fases desta temporada. As sessões de presença não são afetadas.",
+      "deleteHint": "Remove as fases desta temporada. As sessões de presença não são afetadas.",
       "phasesTitle": "Fases",
       "phaseName": "Nome da fase",
       "weeklyHours": "Horas/semana",
@@ -261,7 +268,12 @@
       "copyFromTrack": "Copiar de {track}",
       "copyFromPrevious": "Copiar da temporada anterior (mesmo grupo, datas +1 ano)",
       "templateFrc": "Preencher com o modelo FRC (8 h, 60 h, 42 h/semana)",
-      "copyHint": "Só funciona com o grupo vazio. Depois ajuste as datas, como o kickoff."
+      "copyHint": "Só funciona com o grupo vazio. Depois ajuste as datas, como o kickoff.",
+      "detailsTitle": "Dados da temporada",
+      "deleteConfirmTitle": "Excluir temporada?",
+      "deleteConfirm": "A temporada {name} e todas as suas fases serão removidas. As sessões de presença continuam.",
+      "deletePhaseConfirmTitle": "Excluir fase?",
+      "deletePhaseConfirm": "A fase {name} será removida e as horas esperadas serão recalculadas."
     },
     "dashboard": {
       "title": "Painel",
@@ -341,7 +353,9 @@
     "activate": "Ativar este computador como quiosque",
     "active": "Este computador já está ativado como quiosque.",
     "open": "Abrir o quiosque",
-    "deactivate": "Desativar quiosque neste computador"
+    "deactivate": "Desativar quiosque neste computador",
+    "deactivateConfirmTitle": "Desativar quiosque?",
+    "deactivateConfirm": "Este computador deixa de registrar presença até ser ativado de novo."
   },
   "charts": {
     "weeklyTitle": "Horas por semana",
