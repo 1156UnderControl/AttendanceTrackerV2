@@ -24,7 +24,10 @@ How the infrastructure was created in October 2026, and how to recreate it. Neve
 One OAuth client serves both Supabase projects.
 
 1. <https://console.cloud.google.com> → create a project named `UC Attendance`.
-2. **Google Auth Platform → Branding** (the OAuth consent screen): set the app name to "Under Control Attendance", add a support email, and choose audience **External**.
+2. **Google Auth Platform → Branding** (the OAuth consent screen): set the app name to "Under Control Attendance", add a support email, and choose audience **External**. Publishing also requires:
+   - **App home page:** `https://attendance-tracker-v2-ten.vercel.app`
+   - **Privacy policy:** `https://attendance-tracker-v2-ten.vercel.app/privacidade` (a public page in the app)
+   - **Authorized domains:** `attendance-tracker-v2-ten.vercel.app`, `xnhrsudlvgeglesmhezc.supabase.co`, `tgpsavnhvhovlhdznasu.supabase.co`
 3. **Audience → Publish app** ("In production"). In "Testing" mode only listed test users can sign in, and their sessions expire after 7 days. The basic scopes (`openid`, `email`, `profile`) need no Google verification.
 4. **Clients → Create client → Web application**, named `Supabase`:
    - **Authorized JavaScript origins:** `https://attendance-tracker-v2-ten.vercel.app`

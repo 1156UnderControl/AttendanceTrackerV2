@@ -161,5 +161,25 @@
       "noAccount": "This member has no linked account.",
       "none": "No members found."
     }
+  },
+  "footer": {
+    "privacy": "Privacy"
+  },
+  "privacy": {
+    "title": "Privacy policy",
+    "updated": "Last updated October 10, 2026.",
+    "intro": "This system records lab attendance for members of robotics team 1156 Under Control (FRC and FTC). It is used only internally by the team.",
+    "collectTitle": "What we collect",
+    "collect1": "From your Google account: name, email and account identifier, used only to sign you in.",
+    "collect2": "From your profile: name, category (FRC or FTC), type (student or mentor), entrance code and preferred language.",
+    "collect3": "From attendance: check-in and check-out times recorded at the lab computer, and correction requests.",
+    "useTitle": "How we use it",
+    "use": "To compute attendance hours and percentages against the season goals and to organize the team. We don't sell it, share it with third parties, or use it for advertising.",
+    "accessTitle": "Who can see it",
+    "access": "Each member sees only their own data. Team mentors and administrators see everyone's data to follow attendance. The lab computer shows only the names of people currently present.",
+    "storageTitle": "Where it is stored",
+    "storage": "Data is stored in Supabase (database, São Paulo region) and the website is hosted on Vercel. Sign-in is provided by Google.",
+    "rightsTitle": "Your rights",
+    "rights": "You can view and correct your name, code and language on the My attendance page. To have your account and data deleted, contact a team mentor or administrator."
   }
 }

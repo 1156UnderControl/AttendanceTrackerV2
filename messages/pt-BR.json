@@ -161,5 +161,25 @@
       "noAccount": "Este membro não tem conta vinculada.",
       "none": "Nenhum membro encontrado."
     }
+  },
+  "footer": {
+    "privacy": "Privacidade"
+  },
+  "privacy": {
+    "title": "Política de privacidade",
+    "updated": "Atualizada em 10 de outubro de 2026.",
+    "intro": "Este sistema registra a presença dos membros da equipe de robótica 1156 Under Control (FRC e FTC) no laboratório. Ele é usado apenas internamente pela equipe.",
+    "collectTitle": "Quais dados coletamos",
+    "collect1": "Da sua conta Google: nome, e-mail e identificador da conta, usados somente para entrar no sistema.",
+    "collect2": "Do seu cadastro: nome, categoria (FRC ou FTC), tipo (aluno ou mentor), código de entrada e idioma preferido.",
+    "collect3": "Da presença: horários de entrada e saída registrados no computador do laboratório, e pedidos de correção.",
+    "useTitle": "Para que usamos",
+    "use": "Para calcular horas e percentuais de presença em relação às metas da temporada e para a organização da equipe. Não vendemos, não compartilhamos com terceiros e não usamos os dados para publicidade.",
+    "accessTitle": "Quem tem acesso",
+    "access": "Cada membro vê apenas os próprios dados. Mentores e administradores da equipe veem os dados de todos para acompanhar a presença. O computador do laboratório mostra apenas o nome de quem está presente no momento.",
+    "storageTitle": "Onde os dados ficam",
+    "storage": "Os dados são armazenados no Supabase (banco de dados, região São Paulo) e o site é hospedado na Vercel. O login é feito pelo Google.",
+    "rightsTitle": "Seus direitos",
+    "rights": "Você pode ver e corrigir seu nome, código e idioma na página Minha presença. Para pedir a exclusão da sua conta e dos seus dados, fale com um mentor ou administrador da equipe."
   }
 }
