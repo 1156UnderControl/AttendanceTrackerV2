@@ -88,11 +88,11 @@ export function PageTitle({ children }: { children: ReactNode }) {
   return <h1 className="mb-6 text-3xl font-black">{children}</h1>;
 }
 
-/** V1 "styled-table": bordered box with a hard shadow, sticky yellow header, zebra rows. */
+/** V1 "styled-table": bordered box with a hard shadow, sticky yellow header, zebra rows, centered cells. */
 export function Table({ children }: { children: ReactNode }) {
   return (
     <div className="max-h-[500px] overflow-auto rounded-brutal border-2 border-ink bg-white shadow-brutal">
-      <table className="w-full border-collapse text-left">{children}</table>
+      <table className="w-full border-collapse text-center">{children}</table>
     </div>
   );
 }

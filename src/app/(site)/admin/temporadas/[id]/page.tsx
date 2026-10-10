@@ -240,7 +240,7 @@ async function PhaseFields({
     <ActionForm
       action={savePhase}
       successMessage={t("admin.seasons.saved")}
-      className="flex flex-wrap items-end gap-2"
+      className={`flex flex-wrap items-end gap-2 ${phase ? "justify-center" : ""}`}
       testId={phase ? "phase-form" : "new-phase-form"}
     >
       <input type="hidden" name="seasonId" value={seasonId} />
