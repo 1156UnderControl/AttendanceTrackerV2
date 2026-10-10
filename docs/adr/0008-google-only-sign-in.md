@@ -12,7 +12,7 @@ Members already have Google accounts (school or personal). Email + password adds
 
 - Staging and production allow **only Google** sign-in through Supabase Auth. The **Email provider is disabled** in both projects.
 - The invite flow is unchanged (ADR 0002): an invite link fixes the member type, then Google sign-in, then the profile step.
-- **Local development and CI** can't use real Google sign-in without credentials. They use a **dev login** against seeded accounts (`admin@local.test`, `ana@local.test`, password `devpassword`), shown only when `ENABLE_DEV_LOGIN=true`. That variable is written by `pnpm env:local` and must never be set in Vercel. Even if it were, sign-in would fail, because the cloud projects have the email provider off.
+- **Local development and CI** can't use real Google sign-in without credentials. They use a **dev login** against seeded accounts (`admin@local.test`, `ana@local.test`, password `devpassword`), shown only when `ENABLE_DEV_LOGIN=true`. That variable is written by `pnpm env:local`. The dev login is also **hard-disabled on any Vercel deployment** (`VERCEL_ENV` is set), and sign-in would fail anyway because the cloud projects have the email provider off. This defense in depth was added after the dev login form appeared on production right after launch (2026-10-10).
 - Real Google sign-in can be tested locally by enabling `[auth.external.google]` in `supabase/config.toml` with your own OAuth client.
 
 ## Consequences
