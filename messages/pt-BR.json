@@ -23,7 +23,8 @@
     "kiosk": "Quiosque",
     "sessions": "Sessões",
     "audit": "Auditoria",
-    "seasons": "Temporadas"
+    "seasons": "Temporadas",
+    "adminSections": "Seções do admin"
   },
   "labels": {
     "student": "Aluno(a)",

@@ -75,17 +75,18 @@ export default async function MyAttendancePage({ searchParams }: PageProps<"/min
   const now = (await getNow()).getTime();
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 sm:gap-6">
       <PageTitle>{t("me.title")}</PageTitle>
 
       {row ? (
         <Card tone="brand">
-          <dl className="grid grid-cols-2 gap-4 sm:grid-cols-5">
+          <dl className="grid grid-cols-2 gap-3 sm:grid-cols-5 sm:gap-4">
             <Stat label={t("me.week")} value={hours(row.week_minutes)} />
             <Stat label={t("me.phase")} value={hours(row.phase_minutes)} />
             <Stat label={t("me.season")} value={hours(row.season_minutes)} />
             <Stat label={t("me.expected")} value={hours(row.expected_minutes)} />
             <Stat
+              wide
               label={t("me.pct")}
               value={
                 <span className={toneClass[pctTone(row.pct_to_date, thresholds)]}>
@@ -205,9 +206,12 @@ export default async function MyAttendancePage({ searchParams }: PageProps<"/min
   );
 }
 
-function Stat({ label, value }: { label: string; value: React.ReactNode }) {
+function Stat({ label, value, wide }: { label: string; value: React.ReactNode; wide?: boolean }) {
+  // The fifth tile spans the row on phones instead of sitting alone.
   return (
-    <div className="rounded-brutal border-2 border-ink bg-white p-3 shadow-brutal">
+    <div
+      className={`rounded-brutal border-2 border-ink bg-white p-3 shadow-brutal ${wide ? "col-span-2 sm:col-span-1" : ""}`}
+    >
       <dt className="text-sm font-semibold">{label}</dt>
       <dd className="text-2xl font-black">{value}</dd>
     </div>

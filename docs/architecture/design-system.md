@@ -36,6 +36,16 @@ Defined once in `src/app/globals.css` (`@theme`) and used as Tailwind classes.
 - **Dropdowns:** the native arrow is replaced by a bold chevron with 0.75 rem of space before the border (global `select` rule in `globals.css`).
 - **Light only:** no `dark:` classes. `color-scheme: light` is set globally.
 
+## Phones (below Tailwind's `sm`, 640 px)
+
+- **Site header:** the logo and flags share the top row, with compact links below.
+- **Section navigation** (admin tabs): one dropdown button showing the current section; the tabs return at `sm` and up, with the current one in yellow.
+- **Tables** keep one line per cell and scroll sideways inside their box.
+- **Charts** draw at their container's real width (`useWidth`), so text stays 11–12 px.
+- **Stat tiles:** two per row; an odd last tile spans the row.
+- Cards and page titles use less padding and size.
+- Check every new screen at 375 px before shipping.
+
 ## Components (`src/components/ui.tsx`)
 
 | Component | V1 origin |
