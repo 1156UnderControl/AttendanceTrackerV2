@@ -1,16 +1,19 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getTranslations } from "next-intl/server";
-import { Button, Card, PageTitle } from "@/components/ui";
+import { getFormatter, getTranslations } from "next-intl/server";
+import { Button, Card, PageTitle, Section, Table, Td, Th, Tr } from "@/components/ui";
+import { discardSession } from "@/app/(site)/admin/sessoes/actions";
+import { toLocalInput } from "@/lib/attendance/local-input";
 import { requireAdmin } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { setAdmin } from "../actions";
 import { MemberForm } from "./member-form";
+import { SessionForm } from "./session-form";
 
 export default async function EditMemberPage({ params }: PageProps<"/admin/membros/[id]">) {
   const { id } = await params;
   const auth = await requireAdmin();
-  const t = await getTranslations();
+  const [t, format] = await Promise.all([getTranslations(), getFormatter()]);
   const supabase = await createClient();
 
   const { data: member } = await supabase.from("members").select("*").eq("id", id).maybeSingle();
@@ -19,6 +22,13 @@ export default async function EditMemberPage({ params }: PageProps<"/admin/membr
     ? await supabase.from("admins").select("user_id").eq("user_id", member.user_id).maybeSingle()
     : { data: null };
   const isSelf = member.user_id === auth.userId;
+  const { data: sessions } = await supabase
+    .from("sessions")
+    .select("id, check_in, check_out, auto_closed, credited_minutes")
+    .eq("member_id", member.id)
+    .eq("discarded", false)
+    .order("check_in", { ascending: false })
+    .limit(30);
 
   return (
     <>
@@ -45,6 +55,63 @@ export default async function EditMemberPage({ params }: PageProps<"/admin/membr
           </form>
         )}
       </Card>
+      <Section title={t("admin.memberSessions.title")}>
+        <p className="text-sm">{t("admin.memberSessions.hint")}</p>
+        <Card title={t("admin.memberSessions.newTitle")} tone="brand">
+          <SessionForm memberId={member.id} />
+        </Card>
+        {!sessions?.length ? (
+          <p className="opacity-80">{t("admin.memberSessions.none")}</p>
+        ) : (
+          <Table>
+            <thead>
+              <tr>
+                <Th>{t("me.date")}</Th>
+                <Th>
+                  {t("admin.memberSessions.checkIn")} / {t("admin.memberSessions.checkOut")}
+                </Th>
+                <Th />
+              </tr>
+            </thead>
+            <tbody>
+              {sessions.map((s) => (
+                <Tr key={s.id} data-testid="admin-session-row">
+                  <Td>
+                    <span className="font-bold">
+                      {format.dateTime(new Date(s.check_in), { dateStyle: "medium" })}
+                    </span>
+                    {s.check_out === null && (
+                      <p className="text-sm">{t("admin.memberSessions.open")}</p>
+                    )}
+                    {s.auto_closed && (
+                      <p className="text-sm text-[#b26a00]">
+                        {t("admin.memberSessions.autoClosed")}
+                      </p>
+                    )}
+                  </Td>
+                  <Td>
+                    <SessionForm
+                      memberId={member.id}
+                      sessionId={s.id}
+                      checkIn={toLocalInput(s.check_in)}
+                      checkOut={s.check_out ? toLocalInput(s.check_out) : ""}
+                    />
+                  </Td>
+                  <Td>
+                    <form action={discardSession}>
+                      <input type="hidden" name="sessionId" value={s.id} />
+                      <input type="hidden" name="memberId" value={member.id} />
+                      <Button type="submit" variant="danger" className="px-3 py-1">
+                        {t("admin.memberSessions.discard")}
+                      </Button>
+                    </form>
+                  </Td>
+                </Tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
+      </Section>
     </>
   );
 }

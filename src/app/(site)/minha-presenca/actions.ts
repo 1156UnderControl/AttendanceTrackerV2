@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { z } from "zod";
 import { LOCALE_COOKIE, locales } from "@/i18n/config";
+import { fromLocalInput } from "@/lib/attendance/local-input";
 import { getAuth } from "@/lib/auth/session";
 import { errorCode, type ActionState } from "@/lib/errors";
 import { createClient } from "@/lib/supabase/server";
@@ -41,5 +42,35 @@ export async function updateProfile(_prev: ActionState, formData: FormData): Pro
     sameSite: "lax",
   });
   revalidatePath("/", "layout");
+  return { ok: true };
+}
+
+const correctionSchema = z.object({
+  sessionId: z.uuid(),
+  exit: z.string(),
+  note: z.string().trim().max(500),
+});
+
+// 006-AC3: the member proposes the real exit of their own auto-closed session.
+export async function requestCorrection(
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const parsed = correctionSchema.safeParse({
+    sessionId: formData.get("sessionId"),
+    exit: formData.get("exit"),
+    note: formData.get("note") ?? "",
+  });
+  const exit = parsed.success ? fromLocalInput(parsed.data.exit) : null;
+  if (!parsed.success || !exit) return { error: "INVALID_TIME" };
+
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("request_correction", {
+    p_session_id: parsed.data.sessionId,
+    p_check_out: exit.toISOString(),
+    p_note: parsed.data.note || undefined,
+  });
+  if (error) return { error: errorCode(error) };
+  revalidatePath("/minha-presenca");
   return { ok: true };
 }

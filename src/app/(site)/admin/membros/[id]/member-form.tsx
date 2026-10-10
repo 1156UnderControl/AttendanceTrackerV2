@@ -12,7 +12,7 @@ export function MemberForm({ member }: { member: Tables<"members"> }) {
   const [state, action, pending] = useActionState<ActionState, FormData>(updateMember, {});
 
   return (
-    <form action={action} className="flex flex-col gap-4">
+    <form action={action} className="flex flex-col gap-4" data-testid="member-form">
       <input type="hidden" name="id" value={member.id} />
       {state.error && <Alert>{t(`errors.${state.error}`)}</Alert>}
       {state.ok && <Alert tone="success">{t("admin.members.saved")}</Alert>}

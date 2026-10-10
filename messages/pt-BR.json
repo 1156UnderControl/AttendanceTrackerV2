@@ -20,7 +20,9 @@
     "dashboard": "Painel",
     "members": "Membros",
     "invites": "Convites",
-    "kiosk": "Quiosque"
+    "kiosk": "Quiosque",
+    "sessions": "Sessões",
+    "audit": "Auditoria"
   },
   "labels": {
     "student": "Aluno(a)",
@@ -62,7 +64,13 @@
     "LOCALE_INVALID": "Idioma inválido.",
     "NAME_INVALID": "O nome deve ter entre 2 e 80 caracteres.",
     "NOT_AUTHENTICATED": "Entre com sua conta para continuar.",
-    "UNKNOWN": "Algo deu errado. Tente novamente."
+    "UNKNOWN": "Algo deu errado. Tente novamente.",
+    "ALREADY_PENDING": "Já existe um pedido pendente para esta sessão.",
+    "INVALID_TIME": "Horário inválido: a saída deve ser depois da entrada (e, na correção, até o fechamento automático).",
+    "NOT_CORRECTABLE": "Esta sessão não pode ser corrigida.",
+    "REQUEST_NOT_PENDING": "Este pedido já foi analisado.",
+    "SESSION_NOT_FOUND": "Sessão não encontrada.",
+    "SESSION_OVERLAP": "Esta sessão se sobrepõe a outra do mesmo membro."
   },
   "invite": {
     "title": "Convite",
@@ -109,7 +117,17 @@
     "category": "Categoria",
     "name": "Nome",
     "code": "Código de entrada",
-    "language": "Idioma"
+    "language": "Idioma",
+    "requestCorrection": "Pedir correção",
+    "correctionTitle": "Corrigir horário de saída",
+    "correctionExit": "Horário real de saída",
+    "correctionNote": "Observação (opcional)",
+    "correctionSend": "Enviar pedido",
+    "correctionSent": "Pedido enviado. Um admin vai analisar.",
+    "cancel": "Cancelar",
+    "requestPending": "Correção pendente",
+    "requestApproved": "Correção aprovada",
+    "requestRejected": "Correção rejeitada"
   },
   "admin": {
     "title": "Administração",
@@ -161,6 +179,49 @@
       "ownAdminHint": "Você não pode remover seu próprio acesso de admin.",
       "noAccount": "Este membro não tem conta vinculada.",
       "none": "Nenhum membro encontrado."
+    },
+    "sessions": {
+      "title": "Sessões",
+      "pendingTitle": "Pedidos de correção",
+      "noPending": "Nenhum pedido pendente.",
+      "member": "Membro",
+      "checkIn": "Entrada",
+      "requestedExit": "Saída pedida",
+      "note": "Observação",
+      "approve": "Aprovar",
+      "reject": "Rejeitar",
+      "autoClosedTitle": "Saídas não registradas (sem pedido)",
+      "noAutoClosed": "Nenhuma saída pendente.",
+      "autoClosedAt": "Fechada às",
+      "fix": "Corrigir no membro"
+    },
+    "memberSessions": {
+      "title": "Sessões",
+      "newTitle": "Nova sessão manual",
+      "checkIn": "Entrada",
+      "checkOut": "Saída",
+      "add": "Adicionar sessão",
+      "save": "Salvar",
+      "discard": "Descartar",
+      "saved": "Sessão salva.",
+      "none": "Nenhuma sessão.",
+      "autoClosed": "Fechada automaticamente",
+      "open": "Em andamento",
+      "hint": "Horários de São Paulo. Ao salvar uma saída, a sessão passa a contar a duração real."
+    },
+    "audit": {
+      "title": "Auditoria",
+      "when": "Quando",
+      "who": "Quem",
+      "what": "O quê",
+      "changes": "Alterações",
+      "none": "Nenhum registro ainda.",
+      "unknownUser": "usuário removido",
+      "insert": "criou",
+      "update": "alterou",
+      "delete": "removeu",
+      "previous": "Mais recentes",
+      "next": "Mais antigos"
     }
   },
   "footer": {

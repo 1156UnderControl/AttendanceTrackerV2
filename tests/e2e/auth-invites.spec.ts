@@ -133,9 +133,10 @@ test.describe("member management", () => {
       .filter({ hasText: "Bruno FRC (demo)" })
       .getByRole("link")
       .click();
-    await page.getByLabel("Categoria").selectOption("FTC");
-    await page.getByRole("button", { name: "Salvar" }).click();
-    await expect(page.getByText("Alterações salvas.")).toBeVisible();
+    const memberForm = page.getByTestId("member-form");
+    await memberForm.getByLabel("Categoria").selectOption("FTC");
+    await memberForm.getByRole("button", { name: "Salvar" }).click();
+    await expect(memberForm.getByText("Alterações salvas.")).toBeVisible();
 
     await page.goto("/admin/membros?track=FTC_STUDENTS&status=active");
     await expect(
