@@ -15,25 +15,28 @@ export function ActionForm({
   successMessage,
   className,
   testId,
+  id,
 }: {
   action: Action;
   children: ReactNode;
   successMessage?: string;
   className?: string;
   testId?: string;
+  /** Lets inputs in other table cells join this form with form="…" (a form can't span cells). */
+  id?: string;
 }) {
   const t = useTranslations();
   const [state, formAction] = useActionState<ActionState, FormData>(action, {});
   return (
-    <form action={formAction} className={className} data-testid={testId}>
+    <form id={id} action={formAction} className={className} data-testid={testId}>
       {children}
       {state.error && (
-        <div className="basis-full">
+        <div className="basis-full whitespace-normal">
           <Alert>{t(`errors.${state.error}`)}</Alert>
         </div>
       )}
       {state.ok && successMessage && (
-        <div className="basis-full">
+        <div className="basis-full whitespace-normal">
           <Alert tone="success">{successMessage}</Alert>
         </div>
       )}

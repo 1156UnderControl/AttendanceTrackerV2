@@ -181,27 +181,29 @@ export default async function SeasonPage({
           <Table>
             <thead>
               <tr>
-                <Th>{t("admin.seasons.phasesTitle")}</Th>
+                <Th>{t("admin.seasons.phaseName")}</Th>
+                <Th>{t("admin.seasons.startsOn")}</Th>
+                <Th>{t("admin.seasons.endsOn")}</Th>
+                <Th>{t("admin.seasons.weeklyHours")}</Th>
+                <Th />
                 <Th />
               </tr>
             </thead>
             <tbody>
               {phases.map((p) => (
                 <Tr key={p.id} data-testid="phase-row">
-                  <Td>
-                    <PhaseFields
-                      seasonId={season.id}
-                      track={track}
-                      bounds={dateBounds}
-                      phase={{
-                        id: p.id,
-                        name: p.name,
-                        startsOn: p.starts_on,
-                        endsOn: p.ends_on,
-                        weeklyHours: p.weekly_hours,
-                      }}
-                    />
-                  </Td>
+                  <PhaseRowCells
+                    seasonId={season.id}
+                    track={track}
+                    bounds={dateBounds}
+                    phase={{
+                      id: p.id,
+                      name: p.name,
+                      startsOn: p.starts_on,
+                      endsOn: p.ends_on,
+                      weeklyHours: p.weekly_hours,
+                    }}
+                  />
                   <Td>
                     <form action={deletePhase}>
                       <input type="hidden" name="phaseId" value={p.id} />
@@ -224,56 +226,34 @@ export default async function SeasonPage({
   );
 }
 
+/** The "Adicionar fase" form (labeled fields). */
 async function PhaseFields({
   seasonId,
   track,
   bounds,
-  phase,
 }: {
   seasonId: string;
   track: Track;
   bounds: { min: string; max: string };
-  phase?: { id: string; name: string; startsOn: string; endsOn: string; weeklyHours: number };
 }) {
   const t = await getTranslations();
   return (
     <ActionForm
       action={savePhase}
       successMessage={t("admin.seasons.saved")}
-      className={`flex flex-wrap items-end gap-2 ${phase ? "justify-center" : ""}`}
-      testId={phase ? "phase-form" : "new-phase-form"}
+      className="flex flex-wrap items-end gap-2"
+      testId="new-phase-form"
     >
       <input type="hidden" name="seasonId" value={seasonId} />
       <input type="hidden" name="track" value={track} />
-      {phase && <input type="hidden" name="phaseId" value={phase.id} />}
       <Field label={t("admin.seasons.phaseName")}>
-        <input
-          name="name"
-          required
-          maxLength={60}
-          defaultValue={phase?.name}
-          className={inputClass}
-        />
+        <input name="name" required maxLength={60} className={inputClass} />
       </Field>
       <Field label={t("admin.seasons.startsOn")}>
-        <input
-          name="startsOn"
-          type="date"
-          required
-          {...bounds}
-          defaultValue={phase?.startsOn}
-          className={inputClass}
-        />
+        <input name="startsOn" type="date" required {...bounds} className={inputClass} />
       </Field>
       <Field label={t("admin.seasons.endsOn")}>
-        <input
-          name="endsOn"
-          type="date"
-          required
-          {...bounds}
-          defaultValue={phase?.endsOn}
-          className={inputClass}
-        />
+        <input name="endsOn" type="date" required {...bounds} className={inputClass} />
       </Field>
       <Field label={t("admin.seasons.weeklyHours")}>
         <input
@@ -283,13 +263,95 @@ async function PhaseFields({
           min={0}
           max={168}
           step="0.5"
-          defaultValue={phase?.weeklyHours}
           className={`${inputClass} w-28`}
         />
       </Field>
-      <SubmitButton variant={phase ? "secondary" : "primary"}>
-        {phase ? t("admin.seasons.save") : t("admin.seasons.addPhase")}
-      </SubmitButton>
+      <SubmitButton>{t("admin.seasons.addPhase")}</SubmitButton>
     </ActionForm>
+  );
+}
+
+/**
+ * One editable phase as table cells (003-AC2). The form lives in the "Salvar" cell and the
+ * inputs in the other cells join it through form="…", since a form can't span cells.
+ */
+async function PhaseRowCells({
+  seasonId,
+  track,
+  bounds,
+  phase,
+}: {
+  seasonId: string;
+  track: Track;
+  bounds: { min: string; max: string };
+  phase: { id: string; name: string; startsOn: string; endsOn: string; weeklyHours: number };
+}) {
+  const t = await getTranslations();
+  const form = `phase-${phase.id}`;
+  return (
+    <>
+      <Td>
+        <input
+          form={form}
+          name="name"
+          aria-label={t("admin.seasons.phaseName")}
+          required
+          maxLength={60}
+          defaultValue={phase.name}
+          className={`${inputClass} min-w-40`}
+        />
+      </Td>
+      <Td>
+        <input
+          form={form}
+          name="startsOn"
+          type="date"
+          aria-label={t("admin.seasons.startsOn")}
+          required
+          {...bounds}
+          defaultValue={phase.startsOn}
+          className={inputClass}
+        />
+      </Td>
+      <Td>
+        <input
+          form={form}
+          name="endsOn"
+          type="date"
+          aria-label={t("admin.seasons.endsOn")}
+          required
+          {...bounds}
+          defaultValue={phase.endsOn}
+          className={inputClass}
+        />
+      </Td>
+      <Td>
+        <input
+          form={form}
+          name="weeklyHours"
+          type="number"
+          aria-label={t("admin.seasons.weeklyHours")}
+          required
+          min={0}
+          max={168}
+          step="0.5"
+          defaultValue={phase.weeklyHours}
+          className={`${inputClass} w-24`}
+        />
+      </Td>
+      <Td>
+        <ActionForm
+          id={form}
+          action={savePhase}
+          successMessage={t("admin.seasons.saved")}
+          testId="phase-form"
+        >
+          <input type="hidden" name="seasonId" value={seasonId} />
+          <input type="hidden" name="track" value={track} />
+          <input type="hidden" name="phaseId" value={phase.id} />
+          <SubmitButton variant="secondary">{t("admin.seasons.save")}</SubmitButton>
+        </ActionForm>
+      </Td>
+    </>
   );
 }
