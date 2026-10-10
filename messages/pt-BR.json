@@ -283,7 +283,6 @@
       "position": "#",
       "name": "Nome",
       "seasonHours": "Temporada",
-      "summary": "{active} ativos · média {avg} na semana · {atGoal} bateram a meta (≥ {green}%)",
       "presentTitle": "Agora no lab",
       "presentEmpty": "Ninguém no laboratório agora.",
       "since": "desde {time}",

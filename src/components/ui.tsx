@@ -98,9 +98,19 @@ export function Table({ children }: { children: ReactNode }) {
   );
 }
 
-export function Th({ children, className = "" }: { children?: ReactNode; className?: string }) {
+export function Th({
+  children,
+  className = "",
+  sort,
+}: {
+  children?: ReactNode;
+  className?: string;
+  /** For sortable columns: announced to screen readers. */
+  sort?: "ascending" | "descending" | "none";
+}) {
   return (
     <th
+      aria-sort={sort}
       className={`sticky top-0 z-10 whitespace-nowrap bg-brand px-4 py-3 font-bold text-ink ${className}`}
     >
       {children}
@@ -124,10 +134,24 @@ export function Td({ children, className = "" }: { children?: ReactNode; classNa
 }
 
 /** A titled block without a frame, used around tables (the table brings its own border). */
-export function Section({ title, children }: { title?: ReactNode; children: ReactNode }) {
+export function Section({
+  title,
+  actions,
+  children,
+}: {
+  title?: ReactNode;
+  /** Buttons shown on the heading's line, at the right (e.g. "Exportar CSV"). */
+  actions?: ReactNode;
+  children: ReactNode;
+}) {
   return (
     <section className="flex flex-col gap-3">
-      {title && <h2 className="text-xl font-black">{title}</h2>}
+      {(title || actions) && (
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          {title && <h2 className="text-xl font-black">{title}</h2>}
+          {actions}
+        </div>
+      )}
       {children}
     </section>
   );

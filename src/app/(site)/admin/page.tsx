@@ -3,7 +3,7 @@ import { getFormatter, getNow, getTranslations } from "next-intl/server";
 import { Button, Card, inputClass, PageTitle, Section, Table, Td, Th, Tr } from "@/components/ui";
 import { resolveDashboard } from "@/lib/attendance/dashboard-params";
 import { TRACKS } from "@/lib/attendance/track";
-import { rankWeekly } from "@/lib/attendance/weekly-ranking";
+import { parseSort, rankWeekly, sortWeekly, type SortKey } from "@/lib/attendance/weekly-ranking";
 import { parseThresholds, pctTone, toneClass } from "@/lib/format/attendance";
 import { createClient } from "@/lib/supabase/server";
 import { presentNow } from "./actions";
@@ -21,6 +21,7 @@ export default async function AdminDashboard({ searchParams }: PageProps<"/admin
     sp,
     now,
   );
+  const sort = parseSort(sp.sort, sp.dir);
 
   const [present, settings, rankings] = await Promise.all([
     presentNow(),
@@ -46,7 +47,10 @@ export default async function AdminDashboard({ searchParams }: PageProps<"/admin
               }),
             ]);
             const weekGoal = Math.max(0, (toEnd ?? 0) - (toStart ?? 0));
-            return { track, rows: rankWeekly(data ?? [], weekGoal) };
+            return {
+              track,
+              rows: sortWeekly(rankWeekly(data ?? [], weekGoal), sort.key, sort.dir),
+            };
           }),
         )
       : Promise.resolve([]),
@@ -68,9 +72,33 @@ export default async function AdminDashboard({ searchParams }: PageProps<"/admin
   const index = weeks.indexOf(week);
   const older = weeks[index + 1];
   const newer = weeks[index - 1];
-  const link = (monday: string) =>
-    `?${new URLSearchParams({ season: season?.id ?? "", week: monday })}`;
-  const exportQuery = new URLSearchParams({ season: season?.id ?? "", week });
+  const query = (overrides: Record<string, string>) =>
+    `?${new URLSearchParams({ season: season?.id ?? "", week, sort: sort.key, dir: sort.dir, ...overrides })}`;
+  const link = (monday: string) => query({ week: monday });
+  const exportQuery = query({}).slice(1);
+  // Clickable headers: a new column starts in its natural direction; the same column flips.
+  const sortHref = (key: SortKey) =>
+    query({
+      sort: key,
+      dir:
+        key === sort.key ? (sort.dir === "asc" ? "desc" : "asc") : key === "name" ? "asc" : "desc",
+    });
+  const ariaSort = (key: SortKey): "ascending" | "descending" | "none" =>
+    key === sort.key ? (sort.dir === "asc" ? "ascending" : "descending") : "none";
+  const SortTh = ({ k, label }: { k: SortKey; label: string }) => (
+    <Th sort={ariaSort(k)}>
+      <Link
+        href={sortHref(k)}
+        className="inline-flex items-center gap-1 underline-offset-4 hover:underline"
+      >
+        {label}
+        <span aria-hidden className="w-3 text-xs">
+          {k === sort.key ? (sort.dir === "asc" ? "▲" : "▼") : ""}
+        </span>
+      </Link>
+    </Th>
+  );
+  const weight = (key: SortKey) => (key === sort.key ? "font-black" : "");
 
   return (
     <>
@@ -104,6 +132,8 @@ export default async function AdminDashboard({ searchParams }: PageProps<"/admin
               ))}
             </select>
           </label>
+          <input type="hidden" name="sort" value={sort.key} />
+          <input type="hidden" name="dir" value={sort.dir} />
           <Button type="submit" variant="secondary">
             {t("admin.dashboard.apply")}
           </Button>
@@ -140,31 +170,20 @@ export default async function AdminDashboard({ searchParams }: PageProps<"/admin
         </Card>
       ) : (
         rankings.map(({ track, rows }) => {
-          const values = rows.map((r) => r.weekPct).filter((v): v is number => v !== null);
-          const avg = values.length ? values.reduce((a, b) => a + b, 0) / values.length : null;
-          const atGoal = values.filter((v) => v >= thresholds.green).length;
           return (
-            <Section key={track} title={`${t(`labels.${track}`)} · ${weekLabel(week)}`}>
-              <div
-                className="flex flex-wrap items-center justify-between gap-3"
-                data-testid={`summary-${track}`}
-              >
-                {/* 004-AC6 */}
-                <p className="font-semibold">
-                  {t("admin.dashboard.summary", {
-                    active: rows.length,
-                    avg: pct(avg),
-                    atGoal,
-                    green: thresholds.green,
-                  })}
-                </p>
+            <Section
+              key={track}
+              title={`${t(`labels.${track}`)} · ${weekLabel(week)}`}
+              actions={
                 <a
                   href={`/admin/exportar/ranking?${exportQuery}&track=${track}`}
+                  data-testid={`export-${track}`}
                   className="rounded-brutal border-2 border-ink bg-white px-3 py-1.5 font-bold shadow-brutal"
                 >
                   {t("admin.dashboard.exportRanking")}
                 </a>
-              </div>
+              }
+            >
               {rows.length === 0 ? (
                 <p className="opacity-80">{t("admin.dashboard.none")}</p>
               ) : (
@@ -172,12 +191,12 @@ export default async function AdminDashboard({ searchParams }: PageProps<"/admin
                   <thead>
                     <tr>
                       <Th>{t("admin.dashboard.position")}</Th>
-                      <Th>{t("admin.dashboard.name")}</Th>
-                      <Th>{t("admin.dashboard.weekHours")}</Th>
+                      <SortTh k="name" label={t("admin.dashboard.name")} />
+                      <SortTh k="week" label={t("admin.dashboard.weekHours")} />
                       <Th>{t("admin.dashboard.weekGoal")}</Th>
-                      <Th>{t("admin.dashboard.weekPct")}</Th>
-                      <Th>{t("admin.dashboard.seasonHours")}</Th>
-                      <Th>{t("admin.dashboard.seasonPct")}</Th>
+                      <SortTh k="week_pct" label={t("admin.dashboard.weekPct")} />
+                      <SortTh k="season" label={t("admin.dashboard.seasonHours")} />
+                      <SortTh k="season_pct" label={t("admin.dashboard.seasonPct")} />
                     </tr>
                   </thead>
                   <tbody data-testid={`ranking-${track}`}>
@@ -187,21 +206,23 @@ export default async function AdminDashboard({ searchParams }: PageProps<"/admin
                         <Td>
                           <Link
                             href={`/admin/membros/${r.memberId}`}
-                            className="font-bold underline-offset-4 hover:underline"
+                            className={`underline-offset-4 hover:underline ${sort.key === "name" ? "font-black" : "font-bold"}`}
                           >
                             {r.name}
                           </Link>
                         </Td>
-                        <Td className="tabular-nums">{hours(r.weekMinutes)}</Td>
+                        <Td className={`tabular-nums ${weight("week")}`}>{hours(r.weekMinutes)}</Td>
                         <Td className="tabular-nums">{hours(r.weekGoalMinutes)}</Td>
                         <Td
-                          className={`font-black tabular-nums ${toneClass[pctTone(r.weekPct, thresholds)]}`}
+                          className={`tabular-nums ${weight("week_pct")} ${toneClass[pctTone(r.weekPct, thresholds)]}`}
                         >
                           {pct(r.weekPct)}
                         </Td>
-                        <Td className="tabular-nums">{hours(r.seasonMinutes)}</Td>
+                        <Td className={`tabular-nums ${weight("season")}`}>
+                          {hours(r.seasonMinutes)}
+                        </Td>
                         <Td
-                          className={`tabular-nums ${toneClass[pctTone(r.seasonPct, thresholds)]}`}
+                          className={`tabular-nums ${weight("season_pct")} ${toneClass[pctTone(r.seasonPct, thresholds)]}`}
                         >
                           {pct(r.seasonPct)}
                         </Td>

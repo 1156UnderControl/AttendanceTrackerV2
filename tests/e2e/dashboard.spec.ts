@@ -8,9 +8,7 @@ const SEASON = "00000000-0000-4000-8000-000000002026";
 const WEEK = `/admin?season=${SEASON}&week=2026-09-28`;
 
 test.describe("dashboard", () => {
-  test("[004-AC1][004-AC2][004-AC3][004-AC6] three rankings per track with summaries", async ({
-    page,
-  }) => {
+  test("[004-AC1][004-AC2][004-AC3] three rankings per track with summaries", async ({ page }) => {
     await devLogin(page, "admin@local.test", WEEK);
 
     const frc = page.getByTestId("ranking-FRC_STUDENTS");
@@ -26,10 +24,6 @@ test.describe("dashboard", () => {
     await expect(page.getByTestId("ranking-MENTORS")).not.toContainText("Ana FRC");
     await expect(frc).not.toContainText("Mentor");
     await expect(page.getByTestId("ranking-FTC_STUDENTS")).toContainText("Carla FTC (demo)");
-
-    await expect(page.getByTestId("summary-FRC_STUDENTS")).toContainText(
-      /\d+ ativos · média \d+% na semana/,
-    );
   });
 
   test("[004-AC4] choose the week from the list or step with the arrows", async ({ page }) => {
@@ -54,6 +48,31 @@ test.describe("dashboard", () => {
     await expect(page.getByRole("link", { name: "Semana anterior" })).toHaveCount(0);
   });
 
+  test("[004-AC10] column headers sort the table and keep the choice across weeks", async ({
+    page,
+  }) => {
+    await devLogin(page, "admin@local.test", WEEK);
+    const table = page.getByTestId("ranking-FRC_STUDENTS").locator("xpath=ancestor::table");
+    const seasonHeader = table.getByRole("columnheader", { name: /Temporada/ }).first();
+    await expect(table.getByRole("columnheader", { name: /% semana/ })).toHaveAttribute(
+      "aria-sort",
+      "descending",
+    );
+
+    await seasonHeader.getByRole("link").click();
+    await expect(page).toHaveURL(/sort=season&dir=desc/);
+    await expect(seasonHeader).toHaveAttribute("aria-sort", "descending");
+    await seasonHeader.getByRole("link").click();
+    await expect(page).toHaveURL(/sort=season&dir=asc/);
+    await expect(seasonHeader).toHaveAttribute("aria-sort", "ascending");
+
+    // The sort survives moving to another week.
+    await page.getByRole("link", { name: "Próxima semana" }).click();
+    await expect(page).toHaveURL(
+      /week=2026-10-05.*sort=season&dir=asc|sort=season&dir=asc.*week=2026-10-05/,
+    );
+  });
+
   test("[004-AC5] 'Agora no lab' lists open sessions", async ({ page }) => {
     const elisa = await memberId("333331");
     await db.from("sessions").delete().eq("member_id", elisa).is("check_out", null);
@@ -70,10 +89,7 @@ test.describe("dashboard", () => {
     await devLogin(page, "admin@local.test", WEEK);
 
     const rankingDownload = page.waitForEvent("download");
-    await page
-      .getByTestId("summary-FRC_STUDENTS")
-      .getByRole("link", { name: "Exportar CSV" })
-      .click();
+    await page.getByTestId("export-FRC_STUDENTS").click();
     const bytes = readFileSync(await (await rankingDownload).path());
     // Raw bytes: text decoding would strip the BOM.
     expect([...bytes.subarray(0, 3)]).toEqual([0xef, 0xbb, 0xbf]);

@@ -1,7 +1,7 @@
 import { getNow, getTranslations } from "next-intl/server";
 import { resolveDashboard } from "@/lib/attendance/dashboard-params";
 import { TRACKS, type Track } from "@/lib/attendance/track";
-import { rankWeekly } from "@/lib/attendance/weekly-ranking";
+import { parseSort, rankWeekly, sortWeekly } from "@/lib/attendance/weekly-ranking";
 import { getAuth } from "@/lib/auth/session";
 import { csvResponse } from "@/lib/csv";
 import { createClient } from "@/lib/supabase/server";
@@ -36,7 +36,13 @@ export async function GET(request: Request) {
     }),
     getTranslations("admin.dashboard"),
   ]);
-  const rows = rankWeekly(data ?? [], Math.max(0, (toEnd ?? 0) - (toStart ?? 0)));
+  const sort = parseSort(params.sort, params.dir);
+  // Same order as the dashboard's clickable headers.
+  const rows = sortWeekly(
+    rankWeekly(data ?? [], Math.max(0, (toEnd ?? 0) - (toStart ?? 0))),
+    sort.key,
+    sort.dir,
+  );
   const h = (minutes: number) => Math.round((minutes / 60) * 10) / 10;
 
   return csvResponse(`ranking-${track.toLowerCase()}-${week}.csv`, [

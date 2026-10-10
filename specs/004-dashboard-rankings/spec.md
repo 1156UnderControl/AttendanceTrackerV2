@@ -20,10 +20,12 @@ Admins need to see who is meeting attendance goals. Students compete only within
 - **004-AC3**: % cells are colored ≥ green threshold (default 100), ≥ yellow (default 75), otherwise red. The thresholds come from `settings`.
 - **004-AC4**: Filters: season (default current) and **week** (a list of the season's weeks up to today, default the current week), with previous/next week buttons. Changing them recomputes all values. *(Replaced the "as of" date and the full-season toggle, 2026-10-10.)*
 - **004-AC5**: The "Agora no lab" panel lists open sessions with their elapsed time and refreshes at least every 30 s.
-- **004-AC6**: Each track table shows a summary: number of active members, average % of the week, and how many met the week's goal (≥ the green threshold).
+- **004-AC6**: *(Removed 2026-10-10 at the team's request: the per-track summary line — active members, average %, how many met the goal — was dropped.)*
 - **004-AC7**: `/admin/membros/[id]` shows a session list (editable per spec 006), a weekly hours bar chart, and a cumulative worked vs expected line chart.
 - **004-AC8**: The "Exportar CSV" buttons download the rankings (per track) and the sessions (date range), in UTF-8 with a BOM so Excel opens them.
 - **004-AC9**: Non-admins get a 404 or redirect for every `/admin` route, and the ranking RPC refuses non-admin callers.
+
+- **004-AC10**: Clicking a column header (Nome, Semana, % semana, Temporada, % temporada) sorts the table by it; clicking again reverses it. The sorted column shows ▲/▼ and bold values (and `aria-sort`), the choice survives week navigation, and the CSV export follows it. The # column keeps the official weekly position. *(Added 2026-10-10.)*
 
 ## Edge cases
 
