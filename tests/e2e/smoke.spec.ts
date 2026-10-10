@@ -19,7 +19,7 @@ test.describe("smoke", () => {
 
   test("language switcher persists the choice", async ({ page }) => {
     await page.goto("/");
-    await page.getByRole("combobox").selectOption("en");
+    await page.getByRole("button", { name: "English" }).click();
     await expect(page.getByRole("heading", { name: "Under Control Attendance" })).toBeVisible();
     await page.reload();
     await expect(page.locator("html")).toHaveAttribute("lang", "en");

@@ -105,10 +105,10 @@ test.describe("kiosk", () => {
       page.getByRole("heading", { name: "Pessoas no laboratório agora:" }),
     ).toBeVisible();
 
-    await page.getByRole("button", { name: "EN" }).click();
+    await page.getByRole("button", { name: "English" }).click();
     await expect(page.getByRole("heading", { name: "In the lab right now:" })).toBeVisible();
     await ensureCheckedOut(page, "Carla FTC (demo)");
-    await page.getByRole("button", { name: "PT" }).click();
+    await page.getByRole("button", { name: "Português" }).click();
     await expect(
       page.getByRole("heading", { name: "Pessoas no laboratório agora:" }),
     ).toBeVisible();

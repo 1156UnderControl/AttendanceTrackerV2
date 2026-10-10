@@ -11,8 +11,8 @@ import {
   useSyncExternalStore,
   useTransition,
 } from "react";
+import { LanguageFlags } from "@/components/language-flags";
 import { Button, Card, inputClass } from "@/components/ui";
-import { locales } from "@/i18n/config";
 import {
   checkOut,
   refreshPresent,
@@ -110,22 +110,16 @@ export function KioskClient({ initialPresent }: { initialPresent: Present[] }) {
             }).format(now)}
         </p>
         <div className="flex items-center gap-3">
-          {locales.map((l) => (
-            <button
-              key={l}
-              type="button"
-              aria-pressed={l === locale}
-              onClick={() =>
-                startTransition(async () => {
-                  await setKioskLocale(l);
-                  router.refresh();
-                })
-              }
-              className={`cursor-pointer rounded-brutal border-2 border-white px-3 py-1 font-bold ${l === locale ? "bg-white text-navy" : ""}`}
-            >
-              {l === "pt-BR" ? "PT" : "EN"}
-            </button>
-          ))}
+          <LanguageFlags
+            current={locale}
+            disabled={pending}
+            onSelect={(l) =>
+              startTransition(async () => {
+                await setKioskLocale(l);
+                router.refresh();
+              })
+            }
+          />
           <Image
             src="/logo.avif"
             alt="Team 1156"

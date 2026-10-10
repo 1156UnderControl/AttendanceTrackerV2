@@ -71,7 +71,7 @@ body {
 /*
  * Dropdowns: replace the native arrow (which sits against the border) with a bold
  * chevron and room around it. Unlayered on purpose, so it wins over Tailwind's
- * padding utilities. Selects on navy use .select-on-dark for a white chevron.
+ * padding utilities.
  */
 select:not([multiple]) {
   appearance: none;
@@ -80,10 +80,4 @@ select:not([multiple]) {
   background-position: right 0.75rem center;
   background-size: 1rem;
   padding-right: 2.5rem;
-}
-
-select.select-on-dark {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 6l4.5 4.5L12.5 6'/%3E%3C/svg%3E");
-  background-position: right 0.5rem center;
-  padding-right: 2rem;
 }
