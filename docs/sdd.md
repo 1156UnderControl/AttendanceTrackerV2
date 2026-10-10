@@ -70,7 +70,7 @@ IDs are referenced by the specs and tests.
 
 - FR-2.1 An admin creates an invite: type (student/mentor), optional fixed category, expiry, and max uses.
 - FR-2.2 The invite link (`/convite/<token>`) can be copied and shared. Only a hash of the token is stored.
-- FR-2.3 The invitee signs up with Google or email + password and provides: name, **category (FRC/FTC, required)**, and a 6-digit entrance code (unique, or auto-generated).
+- FR-2.3 The invitee signs in with **Google** (the only method, ADR 0008) and provides: name, **category (FRC/FTC, required)**, and a 6-digit entrance code (unique, or auto-generated).
 - FR-2.4 Expired, revoked or used-up invites are rejected.
 - FR-2.5 Admins list, edit, deactivate and reactivate members, promote or demote admins, and revoke invites.
 
@@ -112,7 +112,7 @@ IDs are referenced by the specs and tests.
 
 | ID | Requirement |
 |---|---|
-| NFR-1 Cost | Free tiers only: Vercel Hobby, Supabase Free (2 projects, 500 MB DB), GitHub Actions, Resend free (optional SMTP). |
+| NFR-1 Cost | Free tiers only: Vercel Hobby, Supabase Free (2 projects, 500 MB DB), GitHub Actions. No SMTP: sign-in is Google only. |
 | NFR-2 Security | RLS on every table. Members read only their own rows. Admin checks are made server-side and in RLS. No secrets in git. |
 | NFR-3 Performance | A kiosk action responds in < 1 s at p95. Rankings are computed in SQL. |
 | NFR-4 Availability | The kiosk shows a clear error if the backend is unreachable. The DB keep-alive prevents free-tier pausing. |
@@ -137,6 +137,7 @@ See [architecture/overview.md](architecture/overview.md). In short: a single Nex
 | [0005](adr/0005-kiosk-device-token.md) | Kiosk authenticated as a device, not a user |
 | [0006](adr/0006-i18n-next-intl.md) | Internationalization with next-intl: pt-BR + en, no locale in the URL |
 | [0007](adr/0007-cache-components-disabled.md) | Next.js Cache Components disabled until the next major version |
+| [0008](adr/0008-google-only-sign-in.md) | Google is the only sign-in method; dev login for local/CI |
 
 ## 10. Milestones
 

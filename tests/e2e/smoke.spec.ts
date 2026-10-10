@@ -25,9 +25,16 @@ test.describe("smoke", () => {
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
   });
 
+  test("privacy policy is public and linked from the footer", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("link", { name: "Privacidade" }).click();
+    await expect(page).toHaveURL(/\/privacidade$/);
+    await expect(page.getByRole("heading", { name: "Política de privacidade" })).toBeVisible();
+  });
+
   test("health endpoint responds", async ({ request }) => {
     const response = await request.get("/api/health");
     expect(response.ok()).toBe(true);
-    expect(await response.json()).toMatchObject({ status: "ok", supabase: "not_configured" });
+    expect(await response.json()).toMatchObject({ status: "ok" });
   });
 });

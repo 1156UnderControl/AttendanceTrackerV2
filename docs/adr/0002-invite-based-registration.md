@@ -1,6 +1,6 @@
 # 0002 — Invite-based self-registration, no V1 data migration
 
-- Status: Accepted
+- Status: Accepted (sign-in method amended by [0008](0008-google-only-sign-in.md): Google only)
 - Date: 2026-10-09
 
 ## Context

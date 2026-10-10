@@ -1,8 +1,8 @@
 # 002 — Invites and registration
 
-- Status: Approved
+- Status: Implemented
 - Requirements: FR-2.1 – FR-2.5
-- Related ADRs: [0002](../../docs/adr/0002-invite-based-registration.md)
+- Related ADRs: [0002](../../docs/adr/0002-invite-based-registration.md), [0008](../../docs/adr/0008-google-only-sign-in.md)
 
 ## Problem / motivation
 
@@ -11,13 +11,13 @@ Members need accounts to see their own attendance, and every member must choose 
 ## User stories
 
 - As an **admin**, I create an invite link (for one person or a whole class) and share it on WhatsApp.
-- As an **invitee**, I open the link, sign in with Google or email, and fill in my name, category and entrance code.
+- As an **invitee**, I open the link, sign in with Google, and fill in my name, category and entrance code.
 - As an **admin**, I manage members: edit, deactivate, promote to admin.
 
 ## Acceptance criteria
 
 - **002-AC1**: Given an admin at `/admin/convites`, when they create an invite with a type, an optional category, an expiry (default 7 days) and max uses (default 1), then a link `/convite/<token>` is shown with a copy button. Only the token hash is stored.
-- **002-AC2**: Given a valid invite, when the invitee opens it, then they see the invite's type and are asked to sign in or sign up (Google or email + password).
+- **002-AC2**: Given a valid invite, when the invitee opens it, then they see the invite's type and are asked to sign in with Google.
 - **002-AC3**: After authentication, the form requires the name (2–80 chars) and a category FRC/FTC, which is pre-selected and locked if the invite fixed it. The code is 6 digits, chosen or "gerar automaticamente". On submit, the member is created and the user lands on `/minha-presenca`.
 - **002-AC4**: A duplicate entrance code shows "Código já em uso" and the form keeps its data.
 - **002-AC5**: Expired, revoked or used-up invites show "Convite inválido ou expirado", and no member is created. Concurrent redemptions of the last use allow only one.
@@ -35,4 +35,4 @@ Members need accounts to see their own attendance, and every member must choose 
 ## Out of scope
 
 - Bulk CSV import of members.
-- Emailing invites automatically (optional later, with Resend).
+- Emailing invites automatically (no SMTP; links are shared manually).

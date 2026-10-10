@@ -6,7 +6,7 @@ Attendance tracker for the **1156 Under Control** robotics team (FRC and FTC).
 - **Members** (students and mentors) join by invitation and can see their own attendance.
 - **Admins** see rankings and attendance percentages per track (FRC students, FTC students, Mentors) against configurable season goals.
 
-> Status: **milestone 1 (bootstrap).** The app skeleton, tooling and CI are in place. The features follow the [specs](specs/).
+> Status: **milestone 5 (auth and invites).** Database, CI/CD, Google sign-in, invitations, member area and member management are in place. The kiosk and dashboards follow the [specs](specs/).
 
 ## Quick start
 
@@ -21,14 +21,18 @@ pnpm install
 ```
 
 ```bash
-cp .env.example .env.local
+pnpm db:start
+```
+
+```bash
+pnpm env:local
 ```
 
 ```bash
 pnpm dev
 ```
 
-Open <http://localhost:3000>. For the local database run `pnpm db:start`; it prints the keys to put in `.env.local`. All commands are listed in [AGENTS.md](AGENTS.md#commands).
+Open <http://localhost:3000> and sign in with the **dev login** (`admin@local.test` is an admin; `ana@local.test` is an FRC student). Kiosk codes for the demo members are in `supabase/seed.sql`. All commands are listed in [AGENTS.md](AGENTS.md#commands).
 
 ## Documentation map
 

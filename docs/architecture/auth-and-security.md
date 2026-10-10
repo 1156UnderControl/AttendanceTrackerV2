@@ -4,7 +4,7 @@
 
 | Identity | How it authenticates | What it can do |
 |---|---|---|
-| **Member** | Supabase Auth: Google OAuth or email + password | Read their own data, edit their own name and code, request corrections |
+| **Member** | Supabase Auth: Google OAuth only (ADR 0008) | Read their own data, edit their own name and code, request corrections |
 | **Admin** | Same as a member, plus a row in `admins` | Everything in `/admin` |
 | **Kiosk device** | httpOnly cookie `kiosk_token`, set at `/kiosk/unlock` by an admin | Only `kiosk_toggle`, `kiosk_checkout`, `kiosk_present` |
 | **Cron** | `Authorization: Bearer $CRON_SECRET` (sent by Vercel Cron) | Only `close_stale_sessions` |
@@ -13,7 +13,7 @@
 
 1. An admin creates an invite. The server generates 32 random bytes as a base64url token, stores `sha256(token)`, and shows the link `https://<host>/convite/<token>` **once**. The link can be copied again only by creating a new invite.
 2. The invitee opens the link. `invite_preview(token)` returns `{valid, type, category}` and nothing else.
-3. The invitee authenticates (Google or email + password). Email confirmation can stay **off**, because possessing the invite is the proof of legitimacy. This avoids needing SMTP.
+3. The invitee signs in with Google (ADR 0008). The callback route `/auth/callback` exchanges the PKCE code for a session cookie.
 4. `redeem_invite(token, name, category, code)` runs as the authenticated user. In one transaction it:
    - takes a `select … for update` lock on the invite, and checks it isn't revoked, isn't expired, and has `uses < max_uses`
    - checks the caller has no member row yet
@@ -30,6 +30,14 @@
 - Rotating `KIOSK_TOKEN` revokes every kiosk; an admin then re-unlocks the lab PC.
 - Rate limiting: kiosk actions are limited to about 30/minute per device. Codes are 6 digits, so brute force from the kiosk itself is not a realistic threat model.
 
+## Sessions in Next.js
+
+- `src/lib/supabase/server.ts` creates a per-request client acting as the user, so RLS applies.
+- `src/proxy.ts` (Next 16's renamed middleware) refreshes the session cookie on every request and redirects anonymous users away from `/minha-presenca` and `/admin`.
+- `src/lib/auth/session.ts` → `getAuth()` verifies the JWT with `auth.getClaims()` and loads the member row and admin flag, cached per request. `requireUser()` and `requireAdmin()` guard pages and server actions; admin pages respond **404** to non-admins.
+- Post-login redirects only accept same-site relative paths (`safeNext`).
+- **Dev login** (local/CI only): see ADR 0008.
+
 ## Authorization layers
 
 1. **Proxy** (`src/proxy.ts`, Next 16's renamed middleware): an optimistic check that redirects unauthenticated users from `/admin` and `/minha-presenca` to `/login`.
@@ -45,7 +53,6 @@
 | `KIOSK_TOKEN` | Vercel | Kiosk cookie check |
 | `CRON_SECRET` | Vercel | Cron route |
 | `SUPABASE_DB_PASSWORD_*`, `SUPABASE_PROJECT_REF_*` (+ variable `SUPABASE_POOLER_HOST`) | GitHub Actions | Migrations |
-| `RESEND_API_KEY` (optional) | Supabase Auth SMTP settings | Password reset and invite emails |
 
 Never prefix the secret key with `NEXT_PUBLIC_`. Never commit `.env*` files except `.env.example`.
 
