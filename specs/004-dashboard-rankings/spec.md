@@ -1,6 +1,6 @@
 # 004 — Dashboard and rankings
 
-- Status: Approved
+- Status: Implemented
 - Requirements: FR-4.1 – FR-4.6
 
 ## Problem / motivation

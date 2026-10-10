@@ -18,6 +18,12 @@
   --color-success: #04aa6d;
   --color-danger: #d93025;
 
+  /* Chart series: team-family steps that pass the dataviz validator on white
+     (the literal navy reads gray; the literal yellow has 1.85:1 contrast). */
+  --color-chart-worked: #2a5d9f;
+  --color-chart-goal: #b8860b;
+  --color-chart-grid: #e6e6e6;
+
   --shadow-brutal: 4px 4px 0 0 var(--color-ink);
   --shadow-brutal-lg: 10px 10px 0 0 var(--color-ink);
   --shadow-bubble: 12px 12px 2px 1px rgb(0 0 255 / 0.2);
