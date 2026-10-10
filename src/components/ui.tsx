@@ -98,9 +98,19 @@ export function Table({ children }: { children: ReactNode }) {
   );
 }
 
-export function Th({ children, className = "" }: { children?: ReactNode; className?: string }) {
+export function Th({
+  children,
+  className = "",
+  sort,
+}: {
+  children?: ReactNode;
+  className?: string;
+  /** For sortable columns: announced to screen readers. */
+  sort?: "ascending" | "descending" | "none";
+}) {
   return (
     <th
+      aria-sort={sort}
       className={`sticky top-0 z-10 whitespace-nowrap bg-brand px-4 py-3 font-bold text-ink ${className}`}
     >
       {children}

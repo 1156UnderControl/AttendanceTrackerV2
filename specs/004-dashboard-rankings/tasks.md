@@ -10,3 +10,4 @@
 - [x] T6 — Member page charts: weekly hours vs goal, cumulative worked vs expected, with tooltips and table views (AC7)
 - [x] T7 — CSV export of a track's ranking and of sessions by date range (UTF-8 BOM, `;`) (AC8)
 - [x] T8 — e2e tests per AC; unit tests for the weekly series and CSV
+- [x] T9 — Clickable, sortable column headers that persist in the URL and the CSV (AC10)

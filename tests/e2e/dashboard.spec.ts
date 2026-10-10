@@ -48,6 +48,31 @@ test.describe("dashboard", () => {
     await expect(page.getByRole("link", { name: "Semana anterior" })).toHaveCount(0);
   });
 
+  test("[004-AC10] column headers sort the table and keep the choice across weeks", async ({
+    page,
+  }) => {
+    await devLogin(page, "admin@local.test", WEEK);
+    const table = page.getByTestId("ranking-FRC_STUDENTS").locator("xpath=ancestor::table");
+    const seasonHeader = table.getByRole("columnheader", { name: /Temporada/ }).first();
+    await expect(table.getByRole("columnheader", { name: /% semana/ })).toHaveAttribute(
+      "aria-sort",
+      "descending",
+    );
+
+    await seasonHeader.getByRole("link").click();
+    await expect(page).toHaveURL(/sort=season&dir=desc/);
+    await expect(seasonHeader).toHaveAttribute("aria-sort", "descending");
+    await seasonHeader.getByRole("link").click();
+    await expect(page).toHaveURL(/sort=season&dir=asc/);
+    await expect(seasonHeader).toHaveAttribute("aria-sort", "ascending");
+
+    // The sort survives moving to another week.
+    await page.getByRole("link", { name: "Próxima semana" }).click();
+    await expect(page).toHaveURL(
+      /week=2026-10-05.*sort=season&dir=asc|sort=season&dir=asc.*week=2026-10-05/,
+    );
+  });
+
   test("[004-AC5] 'Agora no lab' lists open sessions", async ({ page }) => {
     const elisa = await memberId("333331");
     await db.from("sessions").delete().eq("member_id", elisa).is("check_out", null);

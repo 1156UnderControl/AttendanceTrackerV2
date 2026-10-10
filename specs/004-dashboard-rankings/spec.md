@@ -25,6 +25,8 @@ Admins need to see who is meeting attendance goals. Students compete only within
 - **004-AC8**: The "Exportar CSV" buttons download the rankings (per track) and the sessions (date range), in UTF-8 with a BOM so Excel opens them.
 - **004-AC9**: Non-admins get a 404 or redirect for every `/admin` route, and the ranking RPC refuses non-admin callers.
 
+- **004-AC10**: Clicking a column header (Nome, Semana, % semana, Temporada, % temporada) sorts the table by it; clicking again reverses it. The sorted column shows ▲/▼ and bold values (and `aria-sort`), the choice survives week navigation, and the CSV export follows it. The # column keeps the official weekly position. *(Added 2026-10-10.)*
+
 ## Edge cases
 
 - Members with zero sessions still appear, at 0%.

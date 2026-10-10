@@ -50,3 +50,36 @@ export function rankWeekly(rows: RankingInput[], weekGoalMinutes: number): Weekl
     return { ...item, position };
   });
 }
+
+export const SORT_KEYS = ["name", "week", "week_pct", "season", "season_pct"] as const;
+export type SortKey = (typeof SORT_KEYS)[number];
+export type SortDir = "asc" | "desc";
+
+export function parseSort(sort: unknown, dir: unknown): { key: SortKey; dir: SortDir } {
+  const key = SORT_KEYS.find((k) => k === sort) ?? "week_pct";
+  const fallback: SortDir = key === "name" ? "asc" : "desc";
+  return { key, dir: dir === "asc" || dir === "desc" ? dir : fallback };
+}
+
+const value: Record<Exclude<SortKey, "name">, (r: WeeklyRow) => number | null> = {
+  week: (r) => r.weekMinutes,
+  week_pct: (r) => r.weekPct,
+  season: (r) => r.seasonMinutes,
+  season_pct: (r) => r.seasonPct,
+};
+
+/**
+ * Re-orders an already ranked list by a column (clickable headers). Positions keep the
+ * official weekly ranking; empty values ("—") always go last; ties fall back to name.
+ */
+export function sortWeekly(rows: WeeklyRow[], key: SortKey, dir: SortDir): WeeklyRow[] {
+  const sign = dir === "asc" ? 1 : -1;
+  const byName = (a: WeeklyRow, b: WeeklyRow) => a.name.localeCompare(b.name, "pt-BR");
+  return [...rows].sort((a, b) => {
+    if (key === "name") return sign * byName(a, b);
+    const va = value[key](a);
+    const vb = value[key](b);
+    if (va === null || vb === null) return va === vb ? byName(a, b) : va === null ? 1 : -1;
+    return sign * (va - vb) || byName(a, b);
+  });
+}
