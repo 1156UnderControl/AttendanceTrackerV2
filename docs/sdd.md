@@ -119,6 +119,7 @@ IDs are referenced by the specs and tests.
 | NFR-5 Time | All instants are stored as `timestamptz`. All business-day logic uses `America/Sao_Paulo`. Weeks start on **Monday**. |
 | NFR-6 i18n | UI available in **pt-BR (default)** and **English**, using next-intl (ADR 0006). All UI strings live in message files, and adding a language means adding one file. Code and docs in English. |
 | NFR-7 Accessibility | The kiosk works keyboard-only, with large targets and high contrast. |
+| NFR-10 Visual identity | Every screen follows the V1 look described in [design-system.md](architecture/design-system.md): League Spartan, navy and team yellow, black borders, hard shadows. Light only (ADR 0009). |
 | NFR-8 Maintainability | Spec-Driven Development, ADRs, typed DB access, tests tied to acceptance criteria. |
 | NFR-9 Privacy | Only name, email and attendance are stored. A member can ask an admin to delete their account. |
 
@@ -138,6 +139,7 @@ See [architecture/overview.md](architecture/overview.md). In short: a single Nex
 | [0006](adr/0006-i18n-next-intl.md) | Internationalization with next-intl: pt-BR + en, no locale in the URL |
 | [0007](adr/0007-cache-components-disabled.md) | Next.js Cache Components disabled until the next major version |
 | [0008](adr/0008-google-only-sign-in.md) | Google is the only sign-in method; dev login for local/CI |
+| [0009](adr/0009-v1-visual-identity-light-only.md) | Keep the V1 visual identity (design system), light only |
 
 ## 10. Milestones
 

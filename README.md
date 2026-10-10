@@ -43,6 +43,7 @@ Open <http://localhost:3000> and sign in with the **dev login** (`admin@local.te
 | [docs/architecture/data-model.md](docs/architecture/data-model.md) | Tables, constraints, RLS matrix |
 | [docs/architecture/auth-and-security.md](docs/architecture/auth-and-security.md) | Roles, invites, kiosk token, secrets |
 | [docs/architecture/attendance-math.md](docs/architecture/attendance-math.md) | How hours, expected hours and % are computed |
+| [docs/architecture/design-system.md](docs/architecture/design-system.md) | Visual identity: colors, font, components (V1 look) |
 | [docs/architecture/ci-cd.md](docs/architecture/ci-cd.md) | Environments, pipelines, release and rollback |
 | [docs/adr/](docs/adr/) | Architecture Decision Records |
 | [docs/runbooks/](docs/runbooks/) | Operational how-tos |

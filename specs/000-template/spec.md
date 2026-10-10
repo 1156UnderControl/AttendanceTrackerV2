@@ -16,6 +16,8 @@ Why this matters, who is affected.
 
 - **NNN-AC1**: Given <context>, when <action>, then <outcome>.
 
+- **NNN-ACx** (UI specs): Screens follow [design-system.md](../../docs/architecture/design-system.md).
+
 ## Edge cases
 
 - …

@@ -8,9 +8,9 @@ export default async function SiteLayout({ children }: LayoutProps<"/">) {
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">{children}</main>
-      <footer className="border-t border-foreground/10">
-        <div className="mx-auto flex max-w-5xl px-4 py-4 text-xs opacity-70">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-10">{children}</main>
+      <footer className="border-t-2 border-ink bg-paper">
+        <div className="mx-auto flex max-w-5xl px-4 py-4 text-sm">
           <Link href="/privacidade" className="underline-offset-4 hover:underline">
             {t("privacy")}
           </Link>

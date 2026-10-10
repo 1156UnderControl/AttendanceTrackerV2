@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getFormatter, getNow, getTranslations } from "next-intl/server";
-import { Card, PageTitle } from "@/components/ui";
+import { Card, PageTitle, Section, Table, Td, Th, Tr } from "@/components/ui";
 import { requireUser } from "@/lib/auth/session";
 import { parseThresholds, pctTone, toneClass } from "@/lib/format/attendance";
 import { createClient } from "@/lib/supabase/server";
@@ -53,7 +53,7 @@ export default async function MyAttendancePage({ searchParams }: PageProps<"/min
       <PageTitle>{t("me.title")}</PageTitle>
 
       {row ? (
-        <Card>
+        <Card tone="brand">
           <dl className="grid grid-cols-2 gap-4 sm:grid-cols-5">
             <Stat label={t("me.week")} value={hours(row.week_minutes)} />
             <Stat label={t("me.phase")} value={hours(row.phase_minutes)} />
@@ -68,7 +68,7 @@ export default async function MyAttendancePage({ searchParams }: PageProps<"/min
               }
             />
           </dl>
-          <p className="mt-4 text-sm opacity-80">
+          <p className="mt-5 font-semibold">
             {t("me.position", {
               position: row.position,
               total: row.total,
@@ -86,58 +86,46 @@ export default async function MyAttendancePage({ searchParams }: PageProps<"/min
         </Card>
       )}
 
-      <Card title={t("me.sessionsTitle")}>
+      <Section title={t("me.sessionsTitle")}>
         {total === 0 ? (
-          <p className="text-sm opacity-70">{t("me.noSessions")}</p>
+          <p className="opacity-80">{t("me.noSessions")}</p>
         ) : (
           <>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
-                <thead className="opacity-70">
-                  <tr>
-                    <th className="py-2 pr-4 font-medium">{t("me.date")}</th>
-                    <th className="py-2 pr-4 font-medium">{t("me.checkIn")}</th>
-                    <th className="py-2 pr-4 font-medium">{t("me.checkOut")}</th>
-                    <th className="py-2 font-medium">{t("me.duration")}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sessions.data?.map((s) => {
-                    const checkIn = new Date(s.check_in);
-                    const minutes =
-                      s.credited_minutes ??
-                      ((s.check_out ? new Date(s.check_out).getTime() : now) - checkIn.getTime()) /
-                        60_000;
-                    return (
-                      <tr
-                        key={s.id}
-                        className="border-t border-foreground/10"
-                        data-testid="session-row"
-                      >
-                        <td className="py-2 pr-4">
-                          {format.dateTime(checkIn, { dateStyle: "medium" })}
-                        </td>
-                        <td className="py-2 pr-4">
-                          {format.dateTime(checkIn, { timeStyle: "short" })}
-                        </td>
-                        <td className="py-2 pr-4">
-                          {s.check_out === null ? (
-                            t("me.open")
-                          ) : s.auto_closed && s.credited_minutes === 0 ? (
-                            <span className="text-amber-600 dark:text-amber-400">
-                              {t("me.autoClosed")}
-                            </span>
-                          ) : (
-                            format.dateTime(new Date(s.check_out), { timeStyle: "short" })
-                          )}
-                        </td>
-                        <td className="py-2">{hours(minutes)}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+            <Table>
+              <thead>
+                <tr>
+                  <Th>{t("me.date")}</Th>
+                  <Th>{t("me.checkIn")}</Th>
+                  <Th>{t("me.checkOut")}</Th>
+                  <Th>{t("me.duration")}</Th>
+                </tr>
+              </thead>
+              <tbody>
+                {sessions.data?.map((s) => {
+                  const checkIn = new Date(s.check_in);
+                  const minutes =
+                    s.credited_minutes ??
+                    ((s.check_out ? new Date(s.check_out).getTime() : now) - checkIn.getTime()) /
+                      60_000;
+                  return (
+                    <Tr key={s.id} data-testid="session-row">
+                      <Td>{format.dateTime(checkIn, { dateStyle: "medium" })}</Td>
+                      <Td>{format.dateTime(checkIn, { timeStyle: "short" })}</Td>
+                      <Td>
+                        {s.check_out === null ? (
+                          t("me.open")
+                        ) : s.auto_closed && s.credited_minutes === 0 ? (
+                          <span className="font-semibold text-[#b26a00]">{t("me.autoClosed")}</span>
+                        ) : (
+                          format.dateTime(new Date(s.check_out), { timeStyle: "short" })
+                        )}
+                      </Td>
+                      <Td>{hours(minutes)}</Td>
+                    </Tr>
+                  );
+                })}
+              </tbody>
+            </Table>
             <div className="mt-4 flex justify-between text-sm">
               {page > 0 ? <Link href={`?page=${page - 1}`}>← {t("me.next")}</Link> : <span />}
               {(page + 1) * PAGE_SIZE < total && (
@@ -146,7 +134,7 @@ export default async function MyAttendancePage({ searchParams }: PageProps<"/min
             </div>
           </>
         )}
-      </Card>
+      </Section>
 
       <Card title={t("me.profileTitle")}>
         <ProfileForm
@@ -163,9 +151,9 @@ export default async function MyAttendancePage({ searchParams }: PageProps<"/min
 
 function Stat({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div>
-      <dt className="text-xs opacity-70">{label}</dt>
-      <dd className="text-xl font-semibold">{value}</dd>
+    <div className="rounded-brutal border-2 border-ink bg-white p-3 shadow-brutal">
+      <dt className="text-sm font-semibold">{label}</dt>
+      <dd className="text-2xl font-black">{value}</dd>
     </div>
   );
 }

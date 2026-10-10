@@ -1,33 +1,54 @@
+import Image from "next/image";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { signOut } from "@/lib/auth/actions";
 import { getAuth } from "@/lib/auth/session";
 
+const linkClass = "block px-4 py-5 text-lg text-white transition hover:bg-navy-hover";
+
+// V1 navbar: navy bar, white links, TEAM 1156 logo on the right.
 export async function SiteHeader() {
   const [auth, t] = await Promise.all([getAuth(), getTranslations()]);
   return (
-    <header className="border-b border-foreground/10">
-      <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
-        <Link href="/" className="font-bold">
-          Under Control 1156
-        </Link>
-        <nav className="flex flex-1 gap-4 text-sm">
-          {auth.member && <Link href="/minha-presenca">{t("nav.myAttendance")}</Link>}
-          {auth.isAdmin && <Link href="/admin">{t("nav.admin")}</Link>}
+    <header className="bg-navy">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 px-2 sm:px-4">
+        <nav className="flex flex-wrap items-center">
+          {auth.member && (
+            <Link href="/minha-presenca" className={linkClass}>
+              {t("nav.myAttendance")}
+            </Link>
+          )}
+          {auth.isAdmin && (
+            <Link href="/admin" className={linkClass}>
+              {t("nav.admin")}
+            </Link>
+          )}
+          {auth.userId ? (
+            <form action={signOut}>
+              <button type="submit" className={`${linkClass} cursor-pointer`}>
+                {t("common.signOut")}
+              </button>
+            </form>
+          ) : (
+            <Link href="/login" className={linkClass}>
+              {t("common.signIn")}
+            </Link>
+          )}
         </nav>
-        <LanguageSwitcher />
-        {auth.userId ? (
-          <form action={signOut}>
-            <button type="submit" className="text-sm underline-offset-4 hover:underline">
-              {t("common.signOut")}
-            </button>
-          </form>
-        ) : (
-          <Link href="/login" className="text-sm underline-offset-4 hover:underline">
-            {t("common.signIn")}
+        <div className="flex items-center gap-4 py-2">
+          <LanguageSwitcher />
+          <Link href="/" aria-label="Team 1156">
+            <Image
+              src="/logo.avif"
+              alt="Team 1156"
+              width={1200}
+              height={350}
+              priority
+              className="h-12 w-auto sm:h-[62px]"
+            />
           </Link>
-        )}
+        </div>
       </div>
     </header>
   );
