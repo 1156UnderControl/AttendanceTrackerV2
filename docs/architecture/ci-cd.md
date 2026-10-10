@@ -52,7 +52,7 @@ Migrations must be **backward compatible** (expand → deploy → contract), bec
 
 | Job | Where | Schedule |
 |---|---|---|
-| Auto-close forgotten sessions | Vercel Cron → `/api/cron/auto-close` | daily `0 7 * * *` UTC (= 04:00 BRT, UTC−3). Added to `vercel.json` together with the route in milestone 8 (spec 006), so the cron never calls a missing endpoint. |
+| Auto-close forgotten sessions | Vercel Cron → `/api/cron/auto-close` | daily `0 7 * * *` UTC (= 04:00 BRT, UTC−3), configured in `vercel.json`. The route checks `Authorization: Bearer $CRON_SECRET` and calls `close_stale_sessions()`. |
 | Supabase keep-alive | GitHub Actions `keepalive.yml` | weekly (Mondays) |
 
 Vercel Hobby allows cron jobs at most once per day, which is all we need. Hobby cron timing is only accurate to the hour (it may fire 07:00–07:59 UTC), so `close_stale_sessions()` always uses the fixed 04:00 cutoff instant and only closes sessions that started before it.

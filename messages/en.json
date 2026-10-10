@@ -20,7 +20,9 @@
     "dashboard": "Dashboard",
     "members": "Members",
     "invites": "Invites",
-    "kiosk": "Kiosk"
+    "kiosk": "Kiosk",
+    "sessions": "Sessions",
+    "audit": "Audit log"
   },
   "labels": {
     "student": "Student",
@@ -62,7 +64,13 @@
     "LOCALE_INVALID": "Invalid language.",
     "NAME_INVALID": "The name must be 2 to 80 characters.",
     "NOT_AUTHENTICATED": "Sign in to continue.",
-    "UNKNOWN": "Something went wrong. Please try again."
+    "UNKNOWN": "Something went wrong. Please try again.",
+    "ALREADY_PENDING": "There is already a pending request for this session.",
+    "INVALID_TIME": "Invalid time: the exit must be after the entry (and, for corrections, no later than the auto-close).",
+    "NOT_CORRECTABLE": "This session can't be corrected.",
+    "REQUEST_NOT_PENDING": "This request was already reviewed.",
+    "SESSION_NOT_FOUND": "Session not found.",
+    "SESSION_OVERLAP": "This session overlaps another one of the same member."
   },
   "invite": {
     "title": "Invite",
@@ -109,7 +117,17 @@
     "category": "Category",
     "name": "Name",
     "code": "Entrance code",
-    "language": "Language"
+    "language": "Language",
+    "requestCorrection": "Request correction",
+    "correctionTitle": "Fix the exit time",
+    "correctionExit": "Actual exit time",
+    "correctionNote": "Note (optional)",
+    "correctionSend": "Send request",
+    "correctionSent": "Request sent. An admin will review it.",
+    "cancel": "Cancel",
+    "requestPending": "Correction pending",
+    "requestApproved": "Correction approved",
+    "requestRejected": "Correction rejected"
   },
   "admin": {
     "title": "Administration",
@@ -161,6 +179,49 @@
       "ownAdminHint": "You can't remove your own admin access.",
       "noAccount": "This member has no linked account.",
       "none": "No members found."
+    },
+    "sessions": {
+      "title": "Sessions",
+      "pendingTitle": "Correction requests",
+      "noPending": "No pending requests.",
+      "member": "Member",
+      "checkIn": "In",
+      "requestedExit": "Requested exit",
+      "note": "Note",
+      "approve": "Approve",
+      "reject": "Reject",
+      "autoClosedTitle": "Unrecorded exits (no request)",
+      "noAutoClosed": "No unrecorded exits.",
+      "autoClosedAt": "Closed at",
+      "fix": "Fix on the member page"
+    },
+    "memberSessions": {
+      "title": "Sessions",
+      "newTitle": "New manual session",
+      "checkIn": "In",
+      "checkOut": "Out",
+      "add": "Add session",
+      "save": "Save",
+      "discard": "Discard",
+      "saved": "Session saved.",
+      "none": "No sessions.",
+      "autoClosed": "Auto-closed",
+      "open": "In progress",
+      "hint": "São Paulo times. Saving an exit makes the session count its real duration."
+    },
+    "audit": {
+      "title": "Audit log",
+      "when": "When",
+      "who": "Who",
+      "what": "What",
+      "changes": "Changes",
+      "none": "No entries yet.",
+      "unknownUser": "deleted user",
+      "insert": "created",
+      "update": "changed",
+      "delete": "deleted",
+      "previous": "Newer",
+      "next": "Older"
     }
   },
   "footer": {

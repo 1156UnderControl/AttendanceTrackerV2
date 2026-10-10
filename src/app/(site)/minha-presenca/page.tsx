@@ -4,6 +4,8 @@ import { Card, PageTitle, Section, Table, Td, Th, Tr } from "@/components/ui";
 import { requireUser } from "@/lib/auth/session";
 import { parseThresholds, pctTone, toneClass } from "@/lib/format/attendance";
 import { createClient } from "@/lib/supabase/server";
+import { toLocalInput } from "@/lib/attendance/local-input";
+import { CorrectionForm } from "./correction-form";
 import { ProfileForm } from "./profile-form";
 
 const PAGE_SIZE = 20;
@@ -25,7 +27,7 @@ export default async function MyAttendancePage({ searchParams }: PageProps<"/min
   const member = auth.member;
   const page = Math.max(0, Number((await searchParams).page ?? 0) || 0);
   const supabase = await createClient();
-  const [stats, sessions, settings] = await Promise.all([
+  const [stats, sessions, settings, requests] = await Promise.all([
     supabase.rpc("my_stats"),
     supabase
       .from("sessions")
@@ -35,7 +37,19 @@ export default async function MyAttendancePage({ searchParams }: PageProps<"/min
       .order("check_in", { ascending: false })
       .range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1),
     supabase.from("settings").select("value").eq("key", "color_thresholds").maybeSingle(),
+    supabase
+      .from("correction_requests")
+      .select("session_id, status, created_at")
+      .eq("member_id", member.id)
+      .order("created_at", { ascending: true }),
   ]);
+  // Latest request per session wins (006-AC7).
+  const requestBySession = new Map((requests.data ?? []).map((r) => [r.session_id, r.status]));
+  const requestLabel = {
+    pending: "me.requestPending",
+    approved: "me.requestApproved",
+    rejected: "me.requestRejected",
+  } as const;
 
   const row = stats.data?.[0];
   const thresholds = parseThresholds(settings.data?.value);
@@ -115,9 +129,37 @@ export default async function MyAttendancePage({ searchParams }: PageProps<"/min
                         {s.check_out === null ? (
                           t("me.open")
                         ) : s.auto_closed && s.credited_minutes === 0 ? (
-                          <span className="font-semibold text-[#b26a00]">{t("me.autoClosed")}</span>
+                          <div>
+                            <span className="font-semibold text-[#b26a00]">
+                              {t("me.autoClosed")}
+                            </span>
+                            {requestBySession.has(s.id) &&
+                            requestBySession.get(s.id) !== "rejected" ? (
+                              <p className="text-sm font-bold">
+                                {t(requestLabel[requestBySession.get(s.id)!])}
+                              </p>
+                            ) : (
+                              <>
+                                {requestBySession.get(s.id) === "rejected" && (
+                                  <p className="text-sm font-bold">{t("me.requestRejected")}</p>
+                                )}
+                                <CorrectionForm
+                                  sessionId={s.id}
+                                  min={toLocalInput(s.check_in)}
+                                  max={toLocalInput(s.check_out)}
+                                />
+                              </>
+                            )}
+                          </div>
                         ) : (
-                          format.dateTime(new Date(s.check_out), { timeStyle: "short" })
+                          <>
+                            {format.dateTime(new Date(s.check_out), { timeStyle: "short" })}
+                            {requestBySession.get(s.id) === "approved" && (
+                              <p className="text-sm font-bold text-success">
+                                {t("me.requestApproved")}
+                              </p>
+                            )}
+                          </>
                         )}
                       </Td>
                       <Td>{hours(minutes)}</Td>

@@ -19,7 +19,7 @@
 - [x] T10 — Supabase `uc-attendance-staging` / `uc-attendance-prod` (sa-east-1), Email auth with confirmation off
 - [x] T10b — CI connects through the session pooler with `--db-url`. No Supabase access token: `link` would need API-key read access.
 - [x] T11 — Vercel project in the Under Control team; Production/Preview env vars (007-AC2)
-- [x] T12 — `vercel.json` disables Git production deploys (007-AC4). The cron entry moves to spec 006 (007-AC6).
+- [x] T12 — `vercel.json` disables Git production deploys (007-AC4) and schedules the auto-close cron (007-AC6, shipped with spec 006).
 - [x] T13 — `deploy.yml`: migrate staging → prod → `vercel build`/`deploy --prebuilt --prod` → smoke test (007-AC3)
 - [x] T14 — `keepalive.yml` weekly + manual (007-AC5); `/api/health` pings Supabase Auth
 - [x] T15 — GitHub: secrets, `PRODUCTION_URL` variable, `production` environment, squash-only merges, branch protection

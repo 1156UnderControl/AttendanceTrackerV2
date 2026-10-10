@@ -1,6 +1,6 @@
 # 006 — Auto-close and corrections
 
-- Status: Approved
+- Status: Implemented
 - Requirements: FR-6.1 – FR-6.4
 - Related ADRs: [0003](../../docs/adr/0003-auto-close-forgotten-sessions.md)
 
