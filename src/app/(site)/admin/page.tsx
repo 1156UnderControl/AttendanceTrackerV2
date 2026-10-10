@@ -3,18 +3,24 @@ import { getFormatter, getNow, getTranslations } from "next-intl/server";
 import { Button, Card, inputClass, PageTitle, Section, Table, Td, Th, Tr } from "@/components/ui";
 import { resolveDashboard } from "@/lib/attendance/dashboard-params";
 import { TRACKS } from "@/lib/attendance/track";
+import { rankWeekly } from "@/lib/attendance/weekly-ranking";
 import { parseThresholds, pctTone, toneClass } from "@/lib/format/attendance";
 import { createClient } from "@/lib/supabase/server";
 import { presentNow } from "./actions";
 import { PresentPanel } from "./present-panel";
 
-// Spec 004: three rankings, live presence, filters and CSV export.
+const navClass = "rounded-brutal border-2 border-ink bg-white px-3 py-2 font-bold shadow-brutal";
+
+// Spec 004: one week at a time (like V1), per track, with live presence and CSV export.
 export default async function AdminDashboard({ searchParams }: PageProps<"/admin">) {
   const sp = await searchParams;
   const [t, format, now] = await Promise.all([getTranslations(), getFormatter(), getNow()]);
   const supabase = await createClient();
-  const { seasons, season, at, atDay } = await resolveDashboard(supabase, sp, now);
-  const pctMode = sp.pct === "season" ? "season" : "toDate";
+  const { seasons, season, weeks, week, at, weekStartsAt } = await resolveDashboard(
+    supabase,
+    sp,
+    now,
+  );
 
   const [present, settings, rankings] = await Promise.all([
     presentNow(),
@@ -22,56 +28,109 @@ export default async function AdminDashboard({ searchParams }: PageProps<"/admin
     season
       ? Promise.all(
           TRACKS.map(async (track) => {
-            const { data } = await supabase.rpc("ranking", {
-              p_season_id: season.id,
-              p_track: track,
-              p_at: at.toISOString(),
-            });
-            return { track, rows: data ?? [] };
+            const [{ data }, { data: toEnd }, { data: toStart }] = await Promise.all([
+              supabase.rpc("ranking", {
+                p_season_id: season.id,
+                p_track: track,
+                p_at: at.toISOString(),
+              }),
+              supabase.rpc("expected_minutes", {
+                p_season_id: season.id,
+                p_track: track,
+                p_at: at.toISOString(),
+              }),
+              supabase.rpc("expected_minutes", {
+                p_season_id: season.id,
+                p_track: track,
+                p_at: weekStartsAt.toISOString(),
+              }),
+            ]);
+            const weekGoal = Math.max(0, (toEnd ?? 0) - (toStart ?? 0));
+            return { track, rows: rankWeekly(data ?? [], weekGoal) };
           }),
         )
       : Promise.resolve([]),
   ]);
   const thresholds = parseThresholds(settings.data?.value);
-  const hours = (minutes: number | null) =>
-    minutes === null
-      ? t("common.empty")
-      : t("common.hours", { value: format.number(minutes / 60, { maximumFractionDigits: 1 }) });
+  const hours = (minutes: number) =>
+    t("common.hours", { value: format.number(minutes / 60, { maximumFractionDigits: 1 }) });
   const pct = (value: number | null) =>
     value === null ? t("common.empty") : `${format.number(value, { maximumFractionDigits: 0 })}%`;
-  const exportQuery = new URLSearchParams({ season: season?.id ?? "", at: atDay });
+  const weekLabel = (monday: string) => {
+    const from = new Date(`${monday}T12:00:00`);
+    const to = new Date(from.getTime() + 6 * 86_400_000);
+    const day = { day: "2-digit", month: "short" } as const;
+    return t("admin.dashboard.weekOption", {
+      from: format.dateTime(from, day),
+      to: format.dateTime(to, day),
+    });
+  };
+  const index = weeks.indexOf(week);
+  const older = weeks[index + 1];
+  const newer = weeks[index - 1];
+  const link = (monday: string) =>
+    `?${new URLSearchParams({ season: season?.id ?? "", week: monday })}`;
+  const exportQuery = new URLSearchParams({ season: season?.id ?? "", week });
 
   return (
     <>
       <PageTitle>{t("admin.dashboard.title")}</PageTitle>
 
-      {/* 004-AC4: filters in one row above the data */}
-      <form className="flex flex-wrap items-end gap-3" data-testid="dashboard-filters">
-        <label className="flex flex-col gap-1 font-bold">
-          {t("admin.dashboard.season")}
-          <select name="season" defaultValue={season?.id} className={inputClass}>
-            {seasons.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="flex flex-col gap-1 font-bold">
-          {t("admin.dashboard.asOf")}
-          <input type="date" name="at" defaultValue={atDay} className={inputClass} />
-        </label>
-        <label className="flex flex-col gap-1 font-bold">
-          {t("admin.dashboard.pctMode")}
-          <select name="pct" defaultValue={pctMode} className={inputClass}>
-            <option value="toDate">{t("admin.dashboard.pctToDate")}</option>
-            <option value="season">{t("admin.dashboard.pctSeason")}</option>
-          </select>
-        </label>
-        <Button type="submit" variant="secondary">
-          {t("admin.dashboard.apply")}
-        </Button>
-      </form>
+      {/* 004-AC4: season and week, in one row above the data */}
+      <div className="flex flex-wrap items-end gap-3">
+        {/* key: remount so the selects show the new values after ◀ / ▶ navigation. */}
+        <form
+          key={`${season?.id}-${week}`}
+          className="flex flex-wrap items-end gap-3"
+          data-testid="dashboard-filters"
+        >
+          <label className="flex flex-col gap-1 font-bold">
+            {t("admin.dashboard.season")}
+            <select name="season" defaultValue={season?.id} className={inputClass}>
+              {seasons.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="flex flex-col gap-1 font-bold">
+            {t("admin.dashboard.weekFilter")}
+            <select name="week" defaultValue={week} className={inputClass}>
+              {weeks.map((monday) => (
+                <option key={monday} value={monday}>
+                  {weekLabel(monday)}
+                </option>
+              ))}
+            </select>
+          </label>
+          <Button type="submit" variant="secondary">
+            {t("admin.dashboard.apply")}
+          </Button>
+        </form>
+        <div className="flex gap-2">
+          {older ? (
+            <Link
+              href={link(older)}
+              className={navClass}
+              aria-label={t("admin.dashboard.previousWeek")}
+              title={t("admin.dashboard.previousWeek")}
+            >
+              ◀
+            </Link>
+          ) : null}
+          {newer ? (
+            <Link
+              href={link(newer)}
+              className={navClass}
+              aria-label={t("admin.dashboard.nextWeek")}
+              title={t("admin.dashboard.nextWeek")}
+            >
+              ▶
+            </Link>
+          ) : null}
+        </div>
+      </div>
 
       <PresentPanel initial={present} />
 
@@ -81,13 +140,11 @@ export default async function AdminDashboard({ searchParams }: PageProps<"/admin
         </Card>
       ) : (
         rankings.map(({ track, rows }) => {
-          const values = rows
-            .map((r) => (pctMode === "season" ? r.pct_season : r.pct_to_date))
-            .filter((v): v is number => v !== null);
+          const values = rows.map((r) => r.weekPct).filter((v): v is number => v !== null);
           const avg = values.length ? values.reduce((a, b) => a + b, 0) / values.length : null;
           const atGoal = values.filter((v) => v >= thresholds.green).length;
           return (
-            <Section key={track} title={t(`labels.${track}`)}>
+            <Section key={track} title={`${t(`labels.${track}`)} · ${weekLabel(week)}`}>
               <div
                 className="flex flex-wrap items-center justify-between gap-3"
                 data-testid={`summary-${track}`}
@@ -100,14 +157,6 @@ export default async function AdminDashboard({ searchParams }: PageProps<"/admin
                     atGoal,
                     green: thresholds.green,
                   })}
-                  {rows[0] && (
-                    <>
-                      {" · "}
-                      {rows[0].current_phase
-                        ? t("admin.dashboard.currentPhase", { phase: rows[0].current_phase })
-                        : t("admin.dashboard.noPhase")}
-                    </>
-                  )}
                 </p>
                 <a
                   href={`/admin/exportar/ranking?${exportQuery}&track=${track}`}
@@ -124,43 +173,40 @@ export default async function AdminDashboard({ searchParams }: PageProps<"/admin
                     <tr>
                       <Th>{t("admin.dashboard.position")}</Th>
                       <Th>{t("admin.dashboard.name")}</Th>
-                      <Th>{t("admin.dashboard.week")}</Th>
-                      <Th>{t("admin.dashboard.phase")}</Th>
+                      <Th>{t("admin.dashboard.weekHours")}</Th>
+                      <Th>{t("admin.dashboard.weekGoal")}</Th>
+                      <Th>{t("admin.dashboard.weekPct")}</Th>
                       <Th>{t("admin.dashboard.seasonHours")}</Th>
-                      <Th>{t("admin.dashboard.expected")}</Th>
-                      <Th>{t("admin.dashboard.pct")}</Th>
+                      <Th>{t("admin.dashboard.seasonPct")}</Th>
                     </tr>
                   </thead>
                   <tbody data-testid={`ranking-${track}`}>
-                    {rows.map((r) => {
-                      const value = pctMode === "season" ? r.pct_season : r.pct_to_date;
-                      return (
-                        <Tr key={r.member_id} data-testid="ranking-row">
-                          <Td className="font-black">{r.position}</Td>
-                          <Td>
-                            <Link
-                              href={`/admin/membros/${r.member_id}`}
-                              className="font-bold underline-offset-4 hover:underline"
-                            >
-                              {r.name}
-                            </Link>
-                          </Td>
-                          <Td className="tabular-nums">{hours(r.week_minutes)}</Td>
-                          <Td className="tabular-nums">{hours(r.phase_minutes)}</Td>
-                          <Td className="tabular-nums">{hours(r.season_minutes)}</Td>
-                          <Td className="tabular-nums">
-                            {hours(
-                              pctMode === "season" ? r.expected_full_minutes : r.expected_minutes,
-                            )}
-                          </Td>
-                          <Td
-                            className={`font-black tabular-nums ${toneClass[pctTone(value, thresholds)]}`}
+                    {rows.map((r) => (
+                      <Tr key={r.memberId} data-testid="ranking-row">
+                        <Td className="font-black">{r.position}</Td>
+                        <Td>
+                          <Link
+                            href={`/admin/membros/${r.memberId}`}
+                            className="font-bold underline-offset-4 hover:underline"
                           >
-                            {pct(value)}
-                          </Td>
-                        </Tr>
-                      );
-                    })}
+                            {r.name}
+                          </Link>
+                        </Td>
+                        <Td className="tabular-nums">{hours(r.weekMinutes)}</Td>
+                        <Td className="tabular-nums">{hours(r.weekGoalMinutes)}</Td>
+                        <Td
+                          className={`font-black tabular-nums ${toneClass[pctTone(r.weekPct, thresholds)]}`}
+                        >
+                          {pct(r.weekPct)}
+                        </Td>
+                        <Td className="tabular-nums">{hours(r.seasonMinutes)}</Td>
+                        <Td
+                          className={`tabular-nums ${toneClass[pctTone(r.seasonPct, thresholds)]}`}
+                        >
+                          {pct(r.seasonPct)}
+                        </Td>
+                      </Tr>
+                    ))}
                   </tbody>
                 </Table>
               )}
@@ -174,17 +220,19 @@ export default async function AdminDashboard({ searchParams }: PageProps<"/admin
           <form action="/admin/exportar/sessoes" className="flex flex-wrap items-end gap-3">
             <label className="flex flex-col gap-1 font-bold">
               {t("admin.dashboard.from")}
-              <input
-                type="date"
-                name="from"
-                defaultValue={season.starts_on}
-                required
-                className={inputClass}
-              />
+              <input type="date" name="from" defaultValue={week} required className={inputClass} />
             </label>
             <label className="flex flex-col gap-1 font-bold">
               {t("admin.dashboard.to")}
-              <input type="date" name="to" defaultValue={atDay} required className={inputClass} />
+              <input
+                type="date"
+                name="to"
+                defaultValue={new Date(Date.parse(`${week}T12:00:00Z`) + 6 * 86_400_000)
+                  .toISOString()
+                  .slice(0, 10)}
+                required
+                className={inputClass}
+              />
             </label>
             <Button type="submit" variant="secondary">
               {t("admin.dashboard.exportSessions")}

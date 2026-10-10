@@ -57,6 +57,19 @@ pct_season  = worked(member, S)              / expected_full_season × 100
 - These can exceed 100%, and we don't cap them. The display rounds to an integer.
 - Hours are displayed with one decimal, formatted for the viewer's locale (`12,5 h` in pt-BR, `12.5 h` in en).
 
+## Weekly view (dashboard)
+
+The dashboard shows one week (Monday → Sunday) at a time:
+
+```text
+at          = min(now, end of Sunday)                 -- the current week counts up to now
+week_hours  = worked(member, [Monday 00:00, at))
+week_goal   = expected_to_date(T, S, at) − expected_to_date(T, S, Sunday before 23:59:59)
+week_pct    = week_hours / week_goal × 100            -- "—" when the goal is 0
+```
+
+So the goal of the current week covers only its elapsed days, like `expected_to_date`. The weekly ranking orders members by `week_pct`, then week hours, then name (dense rank). The season columns use `pct_to_date` at `at`.
+
 ## Ranking
 
 Within one track, among active members only:

@@ -4,21 +4,22 @@ import { db, memberId } from "./db";
 import { devLogin } from "./helpers";
 
 const SEASON = "00000000-0000-4000-8000-000000002026";
-// A fixed "as of" date inside the seeded season keeps the numbers deterministic.
-const AS_OF = `/admin?season=${SEASON}&at=2026-10-07`;
+// A past week of the seeded season keeps the numbers deterministic.
+const WEEK = `/admin?season=${SEASON}&week=2026-09-28`;
 
 test.describe("dashboard", () => {
   test("[004-AC1][004-AC2][004-AC3][004-AC6] three rankings per track with summaries", async ({
     page,
   }) => {
-    await devLogin(page, "admin@local.test", AS_OF);
+    await devLogin(page, "admin@local.test", WEEK);
 
     const frc = page.getByTestId("ranking-FRC_STUDENTS");
-    // Ana: 12 h by Oct 7 against 8 h expected = 150%, colored as "at goal".
+    // Week of Sep 28: Ana worked 8 h (Oct 1 and 3); the goal covers Thu–Sun (season
+    // starts Oct 1): 4 days × 8 h / 7 = 4.6 h → 175%, colored as "at goal".
     const ana = frc.getByTestId("ranking-row").filter({ hasText: "Ana FRC" });
-    await expect(ana).toContainText("12 h");
     await expect(ana).toContainText("8 h");
-    await expect(ana.getByText("150%")).toHaveClass(/text-success/);
+    await expect(ana).toContainText("4,6 h");
+    await expect(ana.getByText("175%").first()).toHaveClass(/text-success/);
 
     // Students never appear in the mentors' ranking, and vice versa.
     await expect(page.getByTestId("ranking-MENTORS")).toContainText("Admin Local");
@@ -26,28 +27,31 @@ test.describe("dashboard", () => {
     await expect(frc).not.toContainText("Mentor");
     await expect(page.getByTestId("ranking-FTC_STUDENTS")).toContainText("Carla FTC (demo)");
 
-    await expect(page.getByTestId("summary-FRC_STUDENTS")).toContainText(/\d+ ativos · média/);
+    await expect(page.getByTestId("summary-FRC_STUDENTS")).toContainText(
+      /\d+ ativos · média \d+% na semana/,
+    );
   });
 
-  test("[004-AC4] filters change the date and the percentage mode", async ({ page }) => {
-    await devLogin(page, "admin@local.test", AS_OF);
-    const ana = page
-      .getByTestId("ranking-FRC_STUDENTS")
-      .getByTestId("ranking-row")
-      .filter({ hasText: "Ana FRC" });
-    await expect(ana).toContainText("150%");
+  test("[004-AC4] choose the week from the list or step with the arrows", async ({ page }) => {
+    await devLogin(page, "admin@local.test", WEEK);
+    const ana = () =>
+      page
+        .getByTestId("ranking-FRC_STUDENTS")
+        .getByTestId("ranking-row")
+        .filter({ hasText: "Ana FRC" });
+    await expect(ana()).toContainText("175%");
 
-    // As of Oct 2: only the Oct 1 session (4 h) against 2 days × 8 h / 7.
-    await page.locator('input[name="at"]').fill("2026-10-02");
-    await page.getByRole("button", { name: "Atualizar" }).click();
-    await expect(ana).toContainText("4 h");
-    await expect(ana).toContainText("175%");
+    // Next week: Ana's Oct 6 session (4 h).
+    await page.getByRole("link", { name: "Próxima semana" }).click();
+    await expect(page).toHaveURL(/week=2026-10-05/);
+    await expect(page.locator('select[name="week"]')).toHaveValue("2026-10-05");
+    await expect(ana().getByRole("cell").nth(2)).toHaveText("4 h");
 
-    // Whole-season percentage: 4 h of 917.4 h.
-    await page.locator('select[name="pct"]').selectOption("season");
+    // Back to Sep 28 through the list.
+    await page.locator('select[name="week"]').selectOption("2026-09-28");
     await page.getByRole("button", { name: "Atualizar" }).click();
-    await expect(ana).toContainText("917,4 h");
-    await expect(ana).toContainText("0%");
+    await expect(ana()).toContainText("175%");
+    await expect(page.getByRole("link", { name: "Semana anterior" })).toHaveCount(0);
   });
 
   test("[004-AC5] 'Agora no lab' lists open sessions", async ({ page }) => {
@@ -63,7 +67,7 @@ test.describe("dashboard", () => {
   });
 
   test("[004-AC8] CSV exports have a BOM and the expected columns", async ({ page }) => {
-    await devLogin(page, "admin@local.test", AS_OF);
+    await devLogin(page, "admin@local.test", WEEK);
 
     const rankingDownload = page.waitForEvent("download");
     await page
@@ -74,8 +78,8 @@ test.describe("dashboard", () => {
     // Raw bytes: text decoding would strip the BOM.
     expect([...bytes.subarray(0, 3)]).toEqual([0xef, 0xbb, 0xbf]);
     const rankingCsv = bytes.toString("utf8");
-    expect(rankingCsv).toContain("#;Nome;Semana (h)");
-    expect(rankingCsv).toMatch(/Ana FRC[^\r\n]*;12;/);
+    expect(rankingCsv).toContain("#;Nome;Semana (h);Meta da semana (h);% semana");
+    expect(rankingCsv).toMatch(/Ana FRC[^;]*;8;4,6;175;/);
 
     const sessions = await page.request.get(
       "/admin/exportar/sessoes?from=2026-10-01&to=2026-10-07",
@@ -90,7 +94,7 @@ test.describe("dashboard", () => {
     page,
     browser,
   }) => {
-    await devLogin(page, "admin@local.test", AS_OF);
+    await devLogin(page, "admin@local.test", WEEK);
     await page
       .getByTestId("ranking-FRC_STUDENTS")
       .getByRole("link", { name: /Ana FRC/ })
