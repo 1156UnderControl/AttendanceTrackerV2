@@ -32,6 +32,7 @@ Defined once in `src/app/globals.css` (`@theme`) and used as Tailwind classes.
 - **Header:** navy bar, white links with `#111` hover, the TEAM 1156 logo (`public/logo.avif`) on the right. Favicon: `src/app/icon.jpg`.
 - **Forms:** cream inputs with a black border and shadow; the yellow "form card" (`<Card tone="brand">`) for focused tasks such as login and invites.
 - **Tables:** `<Table>`, `<Th>`, `<Tr>`, `<Td>`: sticky yellow header, zebra rows, black box with a hard shadow. Put a title above with `<Section>`, not a card around it.
+- **Dropdowns:** the native arrow is replaced by a bold chevron with 0.75 rem of space before the border (global `select` rule in `globals.css`). On navy, add `select-on-dark` for a white chevron.
 - **Light only:** no `dark:` classes. `color-scheme: light` is set globally.
 
 ## Components (`src/components/ui.tsx`)
