@@ -22,7 +22,8 @@
     "invites": "Convites",
     "kiosk": "Quiosque",
     "sessions": "Sessões",
-    "audit": "Auditoria"
+    "audit": "Auditoria",
+    "seasons": "Temporadas"
   },
   "labels": {
     "student": "Aluno(a)",
@@ -70,7 +71,14 @@
     "NOT_CORRECTABLE": "Esta sessão não pode ser corrigida.",
     "REQUEST_NOT_PENDING": "Este pedido já foi analisado.",
     "SESSION_NOT_FOUND": "Sessão não encontrada.",
-    "SESSION_OVERLAP": "Esta sessão se sobrepõe a outra do mesmo membro."
+    "SESSION_OVERLAP": "Esta sessão se sobrepõe a outra do mesmo membro.",
+    "INVALID_DATES": "Datas inválidas: o fim deve ser igual ou depois do início.",
+    "NO_PREVIOUS_SEASON": "Não há temporada anterior com fases neste grupo.",
+    "PHASES_OUTSIDE_SEASON": "Algumas fases ficariam fora das novas datas. Ajuste as fases primeiro.",
+    "PHASE_OUTSIDE_SEASON": "A fase precisa estar dentro das datas da temporada.",
+    "PHASE_OVERLAP": "Esta fase se sobrepõe a outra fase do mesmo grupo.",
+    "SEASON_NAME_IN_USE": "Já existe uma temporada com esse nome.",
+    "TRACK_NOT_EMPTY": "Este grupo já tem fases. Só é possível copiar para um grupo vazio."
   },
   "invite": {
     "title": "Convite",
@@ -222,6 +230,38 @@
       "delete": "removeu",
       "previous": "Mais recentes",
       "next": "Mais antigos"
+    },
+    "seasons": {
+      "title": "Temporadas",
+      "createTitle": "Nova temporada",
+      "name": "Nome",
+      "namePlaceholder": "2026–2027",
+      "startsOn": "Início",
+      "endsOn": "Fim",
+      "create": "Criar temporada",
+      "current": "Atual",
+      "makeCurrent": "Tornar atual",
+      "none": "Nenhuma temporada ainda.",
+      "open": "Configurar",
+      "editTitle": "Temporada {name}",
+      "save": "Salvar",
+      "saved": "Salvo.",
+      "delete": "Excluir temporada",
+      "deleteHint": "Excluir remove as fases desta temporada. As sessões de presença não são afetadas.",
+      "phasesTitle": "Fases",
+      "phaseName": "Nome da fase",
+      "weeklyHours": "Horas/semana",
+      "addPhase": "Adicionar fase",
+      "deletePhase": "Excluir",
+      "noPhases": "Nenhuma fase neste grupo: o percentual aparece como —.",
+      "expectedFull": "Esperado na temporada",
+      "expectedToDate": "Esperado até hoje",
+      "hours": "{value} h",
+      "copyTitle": "Copiar fases",
+      "copyFromTrack": "Copiar de {track}",
+      "copyFromPrevious": "Copiar da temporada anterior (mesmo grupo, datas +1 ano)",
+      "templateFrc": "Preencher com o modelo FRC (8 h, 60 h, 42 h/semana)",
+      "copyHint": "Só funciona com o grupo vazio. Depois ajuste as datas, como o kickoff."
     }
   },
   "footer": {

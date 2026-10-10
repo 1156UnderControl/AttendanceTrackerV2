@@ -1,6 +1,6 @@
 # 003 — Seasons and phases
 
-- Status: Approved
+- Status: Implemented
 - Requirements: FR-3.1 – FR-3.4
 - Related ADRs: [0004](../../docs/adr/0004-per-track-season-phases.md)
 - Math: [attendance-math.md](../../docs/architecture/attendance-math.md)

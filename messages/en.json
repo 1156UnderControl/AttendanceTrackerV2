@@ -22,7 +22,8 @@
     "invites": "Invites",
     "kiosk": "Kiosk",
     "sessions": "Sessions",
-    "audit": "Audit log"
+    "audit": "Audit log",
+    "seasons": "Seasons"
   },
   "labels": {
     "student": "Student",
@@ -70,7 +71,14 @@
     "NOT_CORRECTABLE": "This session can't be corrected.",
     "REQUEST_NOT_PENDING": "This request was already reviewed.",
     "SESSION_NOT_FOUND": "Session not found.",
-    "SESSION_OVERLAP": "This session overlaps another one of the same member."
+    "SESSION_OVERLAP": "This session overlaps another one of the same member.",
+    "INVALID_DATES": "Invalid dates: the end must be on or after the start.",
+    "NO_PREVIOUS_SEASON": "There is no previous season with phases in this group.",
+    "PHASES_OUTSIDE_SEASON": "Some phases would fall outside the new dates. Adjust the phases first.",
+    "PHASE_OUTSIDE_SEASON": "The phase must be within the season's dates.",
+    "PHASE_OVERLAP": "This phase overlaps another phase in the same group.",
+    "SEASON_NAME_IN_USE": "A season with that name already exists.",
+    "TRACK_NOT_EMPTY": "This group already has phases. Copying only works into an empty group."
   },
   "invite": {
     "title": "Invite",
@@ -222,6 +230,38 @@
       "delete": "deleted",
       "previous": "Newer",
       "next": "Older"
+    },
+    "seasons": {
+      "title": "Seasons",
+      "createTitle": "New season",
+      "name": "Name",
+      "namePlaceholder": "2026–2027",
+      "startsOn": "Start",
+      "endsOn": "End",
+      "create": "Create season",
+      "current": "Current",
+      "makeCurrent": "Make current",
+      "none": "No seasons yet.",
+      "open": "Configure",
+      "editTitle": "Season {name}",
+      "save": "Save",
+      "saved": "Saved.",
+      "delete": "Delete season",
+      "deleteHint": "Deleting removes this season's phases. Attendance sessions are not affected.",
+      "phasesTitle": "Phases",
+      "phaseName": "Phase name",
+      "weeklyHours": "Hours/week",
+      "addPhase": "Add phase",
+      "deletePhase": "Delete",
+      "noPhases": "No phases in this group: the percentage shows as —.",
+      "expectedFull": "Expected for the season",
+      "expectedToDate": "Expected to date",
+      "hours": "{value} h",
+      "copyTitle": "Copy phases",
+      "copyFromTrack": "Copy from {track}",
+      "copyFromPrevious": "Copy from the previous season (same group, dates +1 year)",
+      "templateFrc": "Fill with the FRC template (8 h, 60 h, 42 h/week)",
+      "copyHint": "Only works on an empty group. Then adjust dates such as kickoff."
     }
   },
   "footer": {

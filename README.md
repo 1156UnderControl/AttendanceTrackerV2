@@ -6,7 +6,7 @@ Attendance tracker for the **1156 Under Control** robotics team (FRC and FTC).
 - **Members** (students and mentors) join by invitation and can see their own attendance.
 - **Admins** see rankings and attendance percentages per track (FRC students, FTC students, Mentors) against configurable season goals.
 
-> Status: **milestone 8 (auto-close and corrections).** Database, CI/CD, Google sign-in, invitations, member area, member management, the lab kiosk, the 04:00 auto-close, correction requests and the audit log are in place, in the V1 visual style. Seasons UI and dashboards follow the [specs](specs/).
+> Status: **milestone 8 (auto-close and corrections).** Database, CI/CD, Google sign-in, invitations, member area, member management, the lab kiosk, the 04:00 auto-close, correction requests and the audit log are in place, in the V1 visual style. The season configuration UI is in place; dashboards follow the [specs](specs/).
 
 ## Quick start
 
