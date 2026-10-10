@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getFormatter, getTranslations } from "next-intl/server";
+import { getFormatter, getNow, getTranslations } from "next-intl/server";
 import { Button, Card, PageTitle, Section, Table, Td, Th, Tr } from "@/components/ui";
 import { discardSession } from "@/app/(site)/admin/sessoes/actions";
+import { MemberCharts } from "@/components/charts/member-charts";
+import { loadMemberSeries } from "@/lib/attendance/load-series";
 import { toLocalInput } from "@/lib/attendance/local-input";
+import { memberTrack } from "@/lib/attendance/track";
 import { requireAdmin } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { setAdmin } from "../actions";
@@ -29,6 +32,18 @@ export default async function EditMemberPage({ params }: PageProps<"/admin/membr
     .eq("discarded", false)
     .order("check_in", { ascending: false })
     .limit(30);
+  // 004-AC7: charts for the current season.
+  const [{ data: currentSeason }, now] = await Promise.all([
+    supabase.rpc("current_season_id"),
+    getNow(),
+  ]);
+  const series = await loadMemberSeries(
+    supabase,
+    member.id,
+    memberTrack(member.type, member.category),
+    currentSeason ?? null,
+    now,
+  );
 
   return (
     <>
@@ -55,6 +70,7 @@ export default async function EditMemberPage({ params }: PageProps<"/admin/membr
           </form>
         )}
       </Card>
+      <MemberCharts series={series} />
       <Section title={t("admin.memberSessions.title")}>
         <p className="text-sm">{t("admin.memberSessions.hint")}</p>
         <Card title={t("admin.memberSessions.newTitle")} tone="brand">

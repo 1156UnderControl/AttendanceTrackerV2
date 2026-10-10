@@ -139,7 +139,6 @@
   },
   "admin": {
     "title": "Administration",
-    "dashboardSoon": "Rankings and the dashboard arrive in the next milestone. For now, manage members and invites.",
     "invites": {
       "title": "Invites",
       "createTitle": "New invite",
@@ -262,6 +261,36 @@
       "copyFromPrevious": "Copy from the previous season (same group, dates +1 year)",
       "templateFrc": "Fill with the FRC template (8 h, 60 h, 42 h/week)",
       "copyHint": "Only works on an empty group. Then adjust dates such as kickoff."
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "season": "Season",
+      "asOf": "As of",
+      "pctMode": "Percentage",
+      "pctToDate": "To date",
+      "pctSeason": "Of the whole season",
+      "apply": "Update",
+      "noSeason": "No seasons yet. Create one under Seasons.",
+      "position": "#",
+      "name": "Name",
+      "week": "Week",
+      "phase": "Phase",
+      "seasonHours": "Season",
+      "expected": "Expected",
+      "pct": "%",
+      "summary": "{active} active · average {avg} · {atGoal} at goal (≥ {green}%)",
+      "presentTitle": "In the lab now",
+      "presentEmpty": "Nobody is in the lab right now.",
+      "since": "since {time}",
+      "exportRanking": "Export CSV",
+      "sessionsExportTitle": "Export sessions",
+      "from": "From",
+      "to": "To",
+      "exportSessions": "Download CSV",
+      "none": "No active members in this group.",
+      "currentPhase": "Current phase: {phase}",
+      "noPhase": "Between phases",
+      "details": "See member"
     }
   },
   "footer": {
@@ -312,5 +341,19 @@
     "active": "This computer is already activated as the kiosk.",
     "open": "Open the kiosk",
     "deactivate": "Deactivate the kiosk on this computer"
+  },
+  "charts": {
+    "weeklyTitle": "Hours per week",
+    "cumulativeTitle": "Cumulative hours this season",
+    "worked": "Hours worked",
+    "goal": "Goal",
+    "cumulativeWorked": "Worked",
+    "cumulativeGoal": "Expected",
+    "weekOf": "Week of {date}",
+    "showTable": "Show table",
+    "week": "Week",
+    "hours": "{value} h",
+    "empty": "No data for this season yet.",
+    "summary": "{weeks} weeks: {worked} worked of {goal} expected."
   }
 }

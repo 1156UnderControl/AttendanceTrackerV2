@@ -139,7 +139,6 @@
   },
   "admin": {
     "title": "Administração",
-    "dashboardSoon": "Os rankings e o painel chegam no próximo marco. Por enquanto, gerencie membros e convites.",
     "invites": {
       "title": "Convites",
       "createTitle": "Novo convite",
@@ -262,6 +261,36 @@
       "copyFromPrevious": "Copiar da temporada anterior (mesmo grupo, datas +1 ano)",
       "templateFrc": "Preencher com o modelo FRC (8 h, 60 h, 42 h/semana)",
       "copyHint": "Só funciona com o grupo vazio. Depois ajuste as datas, como o kickoff."
+    },
+    "dashboard": {
+      "title": "Painel",
+      "season": "Temporada",
+      "asOf": "Até a data",
+      "pctMode": "Percentual",
+      "pctToDate": "Até a data",
+      "pctSeason": "Da temporada inteira",
+      "apply": "Atualizar",
+      "noSeason": "Nenhuma temporada ainda. Crie uma em Temporadas.",
+      "position": "#",
+      "name": "Nome",
+      "week": "Semana",
+      "phase": "Fase",
+      "seasonHours": "Temporada",
+      "expected": "Esperado",
+      "pct": "%",
+      "summary": "{active} ativos · média {avg} · {atGoal} na meta (≥ {green}%)",
+      "presentTitle": "Agora no lab",
+      "presentEmpty": "Ninguém no laboratório agora.",
+      "since": "desde {time}",
+      "exportRanking": "Exportar CSV",
+      "sessionsExportTitle": "Exportar sessões",
+      "from": "De",
+      "to": "Até",
+      "exportSessions": "Baixar CSV",
+      "none": "Nenhum membro ativo neste grupo.",
+      "currentPhase": "Fase atual: {phase}",
+      "noPhase": "Fora de fase",
+      "details": "Ver membro"
     }
   },
   "footer": {
@@ -312,5 +341,19 @@
     "active": "Este computador já está ativado como quiosque.",
     "open": "Abrir o quiosque",
     "deactivate": "Desativar quiosque neste computador"
+  },
+  "charts": {
+    "weeklyTitle": "Horas por semana",
+    "cumulativeTitle": "Horas acumuladas na temporada",
+    "worked": "Horas trabalhadas",
+    "goal": "Meta",
+    "cumulativeWorked": "Trabalhadas",
+    "cumulativeGoal": "Esperado",
+    "weekOf": "Semana de {date}",
+    "showTable": "Ver tabela",
+    "week": "Semana",
+    "hours": "{value} h",
+    "empty": "Sem dados nesta temporada ainda.",
+    "summary": "{weeks} semanas: {worked} trabalhadas de {goal} esperadas."
   }
 }

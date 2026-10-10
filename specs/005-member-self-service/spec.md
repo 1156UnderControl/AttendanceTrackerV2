@@ -1,6 +1,6 @@
 # 005 — Member self-service ("Minha presença")
 
-- Status: In progress (AC3 chart pending, ships with spec 004's charts)
+- Status: Implemented
 - Requirements: FR-5.1 – FR-5.2
 
 ## User stories

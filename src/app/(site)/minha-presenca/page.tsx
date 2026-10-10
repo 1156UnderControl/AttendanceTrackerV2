@@ -4,7 +4,10 @@ import { Card, PageTitle, Section, Table, Td, Th, Tr } from "@/components/ui";
 import { requireUser } from "@/lib/auth/session";
 import { parseThresholds, pctTone, toneClass } from "@/lib/format/attendance";
 import { createClient } from "@/lib/supabase/server";
+import { MemberCharts } from "@/components/charts/member-charts";
+import { loadMemberSeries } from "@/lib/attendance/load-series";
 import { toLocalInput } from "@/lib/attendance/local-input";
+import { memberTrack } from "@/lib/attendance/track";
 import { CorrectionForm } from "./correction-form";
 import { ProfileForm } from "./profile-form";
 
@@ -60,6 +63,15 @@ export default async function MyAttendancePage({ searchParams }: PageProps<"/min
   const pct = (value: number | null) =>
     value === null ? t("common.empty") : `${format.number(value, { maximumFractionDigits: 0 })}%`;
   const total = sessions.count ?? 0;
+  // 005-AC3: weekly hours vs the weekly goal of the member's track.
+  const { data: currentSeason } = await supabase.rpc("current_season_id");
+  const series = await loadMemberSeries(
+    supabase,
+    member.id,
+    memberTrack(member.type, member.category),
+    currentSeason ?? null,
+    await getNow(),
+  );
   const now = (await getNow()).getTime();
 
   return (
@@ -99,6 +111,8 @@ export default async function MyAttendancePage({ searchParams }: PageProps<"/min
           <p className="text-sm">{t("me.noSeason")}</p>
         </Card>
       )}
+
+      {row && <MemberCharts series={series} cumulative={false} />}
 
       <Section title={t("me.sessionsTitle")}>
         {total === 0 ? (

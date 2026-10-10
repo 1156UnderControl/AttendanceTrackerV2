@@ -44,6 +44,14 @@ Defined once in `src/app/globals.css` (`@theme`) and used as Tailwind classes.
 | `Table`, `Th`, `Tr`, `Td` | `.styled-table`, `.table-wrapper` |
 | `Alert`, `PageTitle`, `Section` | new, same rules |
 
+## Charts
+
+Hand-written SVG components in `src/components/charts/` (no chart library), following the dataviz method:
+
+- **Series colors** (validated on white with the dataviz palette validator; all checks pass): worked hours `#2a5d9f` (`--color-chart-worked`) and goal/expected `#b8860b` (`--color-chart-goal`). The literal team navy reads as gray and the team yellow has 1.85:1 contrast, so charts use these team-family steps.
+- **Marks:** columns at most 24 px wide with 4 px rounded tops; 2 px lines; 8 px end dots with a 2 px white ring; hairline `#e6e6e6` grid; clean tick values.
+- **Identity is never color alone:** every chart has a legend, a hover tooltip (per column, or a crosshair on lines) and a "Ver tabela" table view. Text stays in ink, never in the series color.
+
 ## Kiosk (spec 001)
 
 The kiosk recreates V1's attendance page:
