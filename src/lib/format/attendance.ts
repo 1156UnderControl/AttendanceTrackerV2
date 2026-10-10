@@ -21,8 +21,8 @@ export function pctTone(
 }
 
 export const toneClass = {
-  green: "text-green-700 dark:text-green-400",
-  yellow: "text-amber-600 dark:text-amber-400",
-  red: "text-red-700 dark:text-red-400",
+  green: "text-success",
+  yellow: "text-[#b26a00]",
+  red: "text-danger",
   none: "opacity-60",
 } as const;

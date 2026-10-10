@@ -31,7 +31,7 @@ export default async function InvitePage({ params }: PageProps<"/convite/[token]
 
   return (
     <div className="mx-auto max-w-md">
-      <Card title={t("invite.title")}>
+      <Card title={t("invite.title")} tone="brand">
         <div className="flex flex-col gap-5">
           <p>{t("invite.invitedAs", { type: t(`labels.${preview.type}`) })}</p>
           {auth.userId ? (

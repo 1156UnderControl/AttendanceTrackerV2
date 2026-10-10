@@ -9,7 +9,7 @@ export async function GoogleSignIn({ next }: { next: string }) {
     <div className="flex flex-col gap-6">
       <form action={signInWithGoogle}>
         <input type="hidden" name="next" value={next} />
-        <Button type="submit" variant="secondary" className="w-full py-3">
+        <Button type="submit" variant="secondary" className="w-full py-3 text-lg">
           <svg aria-hidden viewBox="0 0 48 48" className="h-5 w-5">
             <path
               fill="#FFC107"
@@ -35,7 +35,7 @@ export async function GoogleSignIn({ next }: { next: string }) {
       {devLoginEnabled() && (
         <form
           action={devSignIn}
-          className="flex flex-col gap-3 rounded-md border border-dashed border-foreground/30 p-4"
+          className="flex flex-col gap-3 rounded-brutal border-2 border-dashed border-ink bg-white p-4"
         >
           <p className="text-sm font-semibold">{t("devTitle")}</p>
           <p className="text-xs opacity-70">{t("devHint")}</p>

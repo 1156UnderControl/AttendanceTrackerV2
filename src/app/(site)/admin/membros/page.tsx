@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { Button, Card, inputClass, PageTitle } from "@/components/ui";
+import { Button, inputClass, PageTitle, Section, Table, Td, Th, Tr } from "@/components/ui";
 import { memberTrack, TRACKS, type Track } from "@/lib/attendance/track";
 import { createClient } from "@/lib/supabase/server";
 
@@ -53,49 +53,43 @@ export default async function MembersPage({ searchParams }: PageProps<"/admin/me
           OK
         </Button>
       </form>
-      <Card>
+      <Section>
         {rows.length === 0 ? (
-          <p className="text-sm opacity-70">{t("admin.members.none")}</p>
+          <p className="opacity-80">{t("admin.members.none")}</p>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="opacity-70">
-                <tr>
-                  <th className="py-2 pr-4 font-medium">{t("admin.members.name")}</th>
-                  <th className="py-2 pr-4 font-medium">{t("admin.members.code")}</th>
-                  <th className="py-2 pr-4 font-medium">{t("admin.members.track")}</th>
-                  <th className="py-2 pr-4 font-medium">{t("admin.members.status")}</th>
-                  <th className="py-2 pr-4 font-medium">{t("admin.members.admin")}</th>
-                  <th className="py-2" />
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((m) => (
-                  <tr key={m.id} className="border-t border-foreground/10" data-testid="member-row">
-                    <td className="py-2 pr-4">{m.name}</td>
-                    <td className="py-2 pr-4 font-mono">{m.code}</td>
-                    <td className="py-2 pr-4">{t(`labels.${memberTrack(m.type, m.category)}`)}</td>
-                    <td className="py-2 pr-4">
-                      {m.active ? t("admin.members.active") : t("admin.members.inactive")}
-                    </td>
-                    <td className="py-2 pr-4">
-                      {m.user_id && adminIds.has(m.user_id) ? t("common.yes") : ""}
-                    </td>
-                    <td className="py-2">
-                      <Link
-                        href={`/admin/membros/${m.id}`}
-                        className="underline-offset-4 hover:underline"
-                      >
-                        {t("admin.members.edit")}
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Table>
+            <thead>
+              <tr>
+                <Th>{t("admin.members.name")}</Th>
+                <Th>{t("admin.members.code")}</Th>
+                <Th>{t("admin.members.track")}</Th>
+                <Th>{t("admin.members.status")}</Th>
+                <Th>{t("admin.members.admin")}</Th>
+                <Th />
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((m) => (
+                <Tr key={m.id} data-testid="member-row">
+                  <Td>{m.name}</Td>
+                  <Td className="font-mono">{m.code}</Td>
+                  <Td>{t(`labels.${memberTrack(m.type, m.category)}`)}</Td>
+                  <Td>{m.active ? t("admin.members.active") : t("admin.members.inactive")}</Td>
+                  <Td>{m.user_id && adminIds.has(m.user_id) ? t("common.yes") : ""}</Td>
+                  <Td>
+                    <Link
+                      href={`/admin/membros/${m.id}`}
+                      className="underline-offset-4 hover:underline"
+                    >
+                      {t("admin.members.edit")}
+                    </Link>
+                  </Td>
+                </Tr>
+              ))}
+            </tbody>
+          </Table>
         )}
-      </Card>
+      </Section>
     </>
   );
 }

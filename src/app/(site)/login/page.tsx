@@ -12,7 +12,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
 
   return (
     <div className="mx-auto max-w-md">
-      <Card title={t("title")}>
+      <Card title={t("title")} tone="brand">
         <div className="flex flex-col gap-4">
           <p className="text-sm opacity-80">{t("subtitle")}</p>
           {params.error && <Alert>{t("error")}</Alert>}

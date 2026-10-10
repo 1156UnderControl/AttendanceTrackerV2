@@ -13,10 +13,10 @@ export function LanguageSwitcher() {
   const [pending, startTransition] = useTransition();
 
   return (
-    <label className="flex items-center gap-2 text-sm">
+    <label className="flex items-center gap-2 text-white">
       <span>{t("label")}</span>
       <select
-        className="rounded border border-foreground/20 bg-background px-2 py-1"
+        className="cursor-pointer rounded-brutal border-2 border-white bg-navy px-2 py-1 font-semibold text-white"
         value={current}
         disabled={pending}
         onChange={(event) => {

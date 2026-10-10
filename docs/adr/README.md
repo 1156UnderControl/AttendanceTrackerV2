@@ -12,3 +12,4 @@ We use the [MADR](https://adr.github.io/madr/) format. To add one, copy [0000-te
 | [0006](0006-i18n-next-intl.md) | Internationalization with next-intl | Accepted |
 | [0007](0007-cache-components-disabled.md) | Cache Components disabled (for now) | Accepted |
 | [0008](0008-google-only-sign-in.md) | Google is the only sign-in method | Accepted |
+| [0009](0009-v1-visual-identity-light-only.md) | Keep the V1 visual identity, light only | Accepted |
