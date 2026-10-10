@@ -20,6 +20,9 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
         <Link href="/admin/convites" className={tabClass}>
           {t("invites")}
         </Link>
+        <Link href="/kiosk/unlock" className={tabClass}>
+          {t("kiosk")}
+        </Link>
       </nav>
       {children}
     </div>

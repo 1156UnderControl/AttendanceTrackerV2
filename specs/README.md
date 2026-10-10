@@ -14,7 +14,7 @@ Acceptance criteria use IDs `NNN-ACx`. Every one must have at least one test who
 
 | # | Spec | Status |
 |---|---|---|
-| 001 | [Kiosk check-in/out](001-kiosk-check-in-out/spec.md) | Approved |
+| 001 | [Kiosk check-in/out](001-kiosk-check-in-out/spec.md) | Implemented |
 | 002 | [Invites and registration](002-invites-and-registration/spec.md) | Implemented |
 | 003 | [Seasons and phases](003-seasons-and-phases/spec.md) | Approved |
 | 004 | [Dashboard and rankings](004-dashboard-rankings/spec.md) | Approved |

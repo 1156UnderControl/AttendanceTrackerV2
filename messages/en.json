@@ -19,7 +19,8 @@
     "admin": "Admin",
     "dashboard": "Dashboard",
     "members": "Members",
-    "invites": "Invites"
+    "invites": "Invites",
+    "kiosk": "Kiosk"
   },
   "labels": {
     "student": "Student",
@@ -181,5 +182,34 @@
     "storage": "Data is stored in Supabase (database, São Paulo region) and the website is hosted on Vercel. Sign-in is provided by Google.",
     "rightsTitle": "Your rights",
     "rights": "You can view and correct your name, code and language on the My attendance page. To have your account and data deleted, contact a team mentor or administrator."
+  },
+  "kiosk": {
+    "codeLabel": "CODE",
+    "placeholder": "TYPE YOUR CODE",
+    "submit": "CHECK IN / OUT",
+    "presentTitle": "In the lab right now:",
+    "nobody": "Nobody is in the lab right now.",
+    "welcome": "Welcome, {name}!",
+    "goodbye": "See you, {name}! {duration} today.",
+    "duration": "{hours}h {minutes}min",
+    "elapsed": "{hours}h {minutes}min",
+    "notFound": "Code not found.",
+    "offline": "No connection, please try again.",
+    "confirmTitle": "Check out",
+    "confirmBody": "Check out {name}?",
+    "confirm": "Yes, check out",
+    "cancel": "Cancel",
+    "filter": "Search name",
+    "unauthorizedTitle": "Kiosk not authorized",
+    "unauthorizedBody": "This computer hasn't been activated yet. Ask an admin to activate it at /kiosk/unlock."
+  },
+  "kioskUnlock": {
+    "title": "Activate kiosk",
+    "body": "Turns this browser into the lab kiosk: anyone can check in with their code, without signing in. Only use it on the lab computer.",
+    "language": "Kiosk default language",
+    "activate": "Activate this computer as the kiosk",
+    "active": "This computer is already activated as the kiosk.",
+    "open": "Open the kiosk",
+    "deactivate": "Deactivate the kiosk on this computer"
   }
 }
