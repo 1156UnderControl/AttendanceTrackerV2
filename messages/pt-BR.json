@@ -266,20 +266,12 @@
     "dashboard": {
       "title": "Painel",
       "season": "Temporada",
-      "asOf": "Até a data",
-      "pctMode": "Percentual",
-      "pctToDate": "Até a data",
-      "pctSeason": "Da temporada inteira",
       "apply": "Atualizar",
       "noSeason": "Nenhuma temporada ainda. Crie uma em Temporadas.",
       "position": "#",
       "name": "Nome",
-      "week": "Semana",
-      "phase": "Fase",
       "seasonHours": "Temporada",
-      "expected": "Esperado",
-      "pct": "%",
-      "summary": "{active} ativos · média {avg} · {atGoal} na meta (≥ {green}%)",
+      "summary": "{active} ativos · média {avg} na semana · {atGoal} bateram a meta (≥ {green}%)",
       "presentTitle": "Agora no lab",
       "presentEmpty": "Ninguém no laboratório agora.",
       "since": "desde {time}",
@@ -291,7 +283,15 @@
       "none": "Nenhum membro ativo neste grupo.",
       "currentPhase": "Fase atual: {phase}",
       "noPhase": "Fora de fase",
-      "details": "Ver membro"
+      "details": "Ver membro",
+      "weekFilter": "Semana",
+      "weekOption": "{from} – {to}",
+      "previousWeek": "Semana anterior",
+      "nextWeek": "Próxima semana",
+      "weekHours": "Semana",
+      "weekGoal": "Meta da semana",
+      "weekPct": "% semana",
+      "seasonPct": "% temporada"
     }
   },
   "footer": {

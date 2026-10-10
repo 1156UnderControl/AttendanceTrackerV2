@@ -266,20 +266,12 @@
     "dashboard": {
       "title": "Dashboard",
       "season": "Season",
-      "asOf": "As of",
-      "pctMode": "Percentage",
-      "pctToDate": "To date",
-      "pctSeason": "Of the whole season",
       "apply": "Update",
       "noSeason": "No seasons yet. Create one under Seasons.",
       "position": "#",
       "name": "Name",
-      "week": "Week",
-      "phase": "Phase",
       "seasonHours": "Season",
-      "expected": "Expected",
-      "pct": "%",
-      "summary": "{active} active · average {avg} · {atGoal} at goal (≥ {green}%)",
+      "summary": "{active} active · average {avg} this week · {atGoal} met the goal (≥ {green}%)",
       "presentTitle": "In the lab now",
       "presentEmpty": "Nobody is in the lab right now.",
       "since": "since {time}",
@@ -291,7 +283,15 @@
       "none": "No active members in this group.",
       "currentPhase": "Current phase: {phase}",
       "noPhase": "Between phases",
-      "details": "See member"
+      "details": "See member",
+      "weekFilter": "Week",
+      "weekOption": "{from} – {to}",
+      "previousWeek": "Previous week",
+      "nextWeek": "Next week",
+      "weekHours": "Week",
+      "weekGoal": "Week goal",
+      "weekPct": "% week",
+      "seasonPct": "% season"
     }
   },
   "footer": {
