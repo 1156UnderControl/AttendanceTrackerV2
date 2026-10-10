@@ -11,3 +11,4 @@ We use the [MADR](https://adr.github.io/madr/) format. To add one, copy [0000-te
 | [0005](0005-kiosk-device-token.md) | Kiosk authenticated as a device | Accepted |
 | [0006](0006-i18n-next-intl.md) | Internationalization with next-intl | Accepted |
 | [0007](0007-cache-components-disabled.md) | Cache Components disabled (for now) | Accepted |
+| [0008](0008-google-only-sign-in.md) | Google is the only sign-in method | Accepted |

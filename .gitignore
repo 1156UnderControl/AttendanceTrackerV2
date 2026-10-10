@@ -30,3 +30,6 @@ test-results/
 next-env.d.ts
 *.pem
 .pnpm-debug.log*
+
+# local editor/agent config
+.claude/launch.json

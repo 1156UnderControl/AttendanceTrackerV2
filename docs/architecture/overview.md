@@ -12,7 +12,6 @@ flowchart LR
   end
   supa[(Supabase<br/>Postgres + Auth)]
   google[Google OAuth]
-  resend[Resend SMTP<br/>optional]
   gha[GitHub Actions]
 
   kioskUser -->|types code / clicks name| app
@@ -20,7 +19,6 @@ flowchart LR
   admin -->|manages, views dashboards| app
   app --> supa
   supa --> google
-  supa --> resend
   gha -->|CI, migrations, keep-alive| supa
   gha -->|gates deploy| app
 ```
@@ -59,7 +57,8 @@ flowchart TB
 |---|---|---|
 | `/kiosk` | Kiosk device (cookie `kiosk_token`) | Code entry and the present-members grid. |
 | `/kiosk/unlock` | Admin | Sets the kiosk cookie on the current device. |
-| `/login` | Anyone | Google or email + password. |
+| `/login` | Anyone | Google sign-in (plus the dev login locally and in CI). |
+| `/auth/callback` | Google OAuth redirect | Exchanges the code for a session, then redirects to `next`. |
 | `/convite/[token]` | Invitee | Signup and profile (name, category, code). |
 | `/minha-presenca` | Member | Own stats and sessions, correction requests. |
 | `/admin` | Admin | Dashboard: 3 rankings, "Agora no lab". |
@@ -132,7 +131,7 @@ sequenceDiagram
   participant DB as Postgres
   U->>A: open /convite/<token>
   A->>DB: rpc invite_preview(token) (validity, type, fixed category)
-  U->>Auth: sign up (Google or email+password)
+  U->>Auth: sign in with Google
   U->>A: submit name, category, code
   A->>DB: rpc redeem_invite(token, name, category, code) as the user
   DB->>DB: lock invite, check expiry/uses, insert member, uses+1

@@ -5,7 +5,9 @@ const baseURL = `http://localhost:${PORT}`;
 
 export default defineConfig({
   testDir: "tests/e2e",
-  fullyParallel: true,
+  // Tests share one local database, so run them one at a time.
+  fullyParallel: false,
+  workers: 1,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : "list",

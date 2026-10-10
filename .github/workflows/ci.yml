@@ -74,6 +74,9 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
       - run: pnpm exec playwright install --with-deps chromium
+      # e2e runs against a local Supabase with the seed data and the dev login (ADR 0008).
+      - run: pnpm exec supabase start -x realtime,storage-api,imgproxy,mailpit,studio,edge-runtime,logflare,vector,supavisor
+      - run: pnpm env:local
       - run: pnpm build
       - run: pnpm test:e2e
       - uses: actions/upload-artifact@v7

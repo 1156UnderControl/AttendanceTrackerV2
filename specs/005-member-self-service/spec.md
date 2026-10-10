@@ -1,6 +1,6 @@
 # 005 — Member self-service ("Minha presença")
 
-- Status: Approved
+- Status: In progress (AC3 chart pending, ships with spec 004's charts)
 - Requirements: FR-5.1 – FR-5.2
 
 ## User stories
@@ -11,7 +11,7 @@
 ## Acceptance criteria
 
 - **005-AC1**: `/minha-presenca` shows hours this week, hours in the current phase, season hours, expected hours to date, % to date with its color band, and "Posição: N de M" in the member's track.
-- **005-AC2**: It shows a list of the member's sessions (date, entrance, exit, duration), newest first, with pagination. Auto-closed sessions are marked "Saída não registrada" and have a "Pedir correção" button (spec 006).
+- **005-AC2**: It shows a list of the member's sessions (date, entrance, exit, duration), newest first, with pagination. Auto-closed sessions are marked "Saída não registrada". The "Pedir correção" button ships with spec 006.
 - **005-AC3**: It shows a weekly hours chart compared with the expected weekly hours for each phase.
 - **005-AC4**: A member can edit their name and entrance code (unique, 6 digits). Type and category are read-only and say "fale com um admin".
 - **005-AC5**: A member can never read another member's sessions or individual stats. Verified by RLS tests: requesting another member's data returns empty or is denied.
