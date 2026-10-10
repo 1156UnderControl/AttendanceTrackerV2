@@ -64,10 +64,7 @@ test.describe("dashboard", () => {
     await devLogin(page, "admin@local.test", WEEK);
 
     const rankingDownload = page.waitForEvent("download");
-    await page
-      .getByTestId("ranking-actions-FRC_STUDENTS")
-      .getByRole("link", { name: "Exportar CSV" })
-      .click();
+    await page.getByTestId("export-FRC_STUDENTS").click();
     const bytes = readFileSync(await (await rankingDownload).path());
     // Raw bytes: text decoding would strip the BOM.
     expect([...bytes.subarray(0, 3)]).toEqual([0xef, 0xbb, 0xbf]);

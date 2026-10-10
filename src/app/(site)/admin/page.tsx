@@ -141,15 +141,19 @@ export default async function AdminDashboard({ searchParams }: PageProps<"/admin
       ) : (
         rankings.map(({ track, rows }) => {
           return (
-            <Section key={track} title={`${t(`labels.${track}`)} · ${weekLabel(week)}`}>
-              <div className="flex justify-end" data-testid={`ranking-actions-${track}`}>
+            <Section
+              key={track}
+              title={`${t(`labels.${track}`)} · ${weekLabel(week)}`}
+              actions={
                 <a
                   href={`/admin/exportar/ranking?${exportQuery}&track=${track}`}
+                  data-testid={`export-${track}`}
                   className="rounded-brutal border-2 border-ink bg-white px-3 py-1.5 font-bold shadow-brutal"
                 >
                   {t("admin.dashboard.exportRanking")}
                 </a>
-              </div>
+              }
+            >
               {rows.length === 0 ? (
                 <p className="opacity-80">{t("admin.dashboard.none")}</p>
               ) : (
