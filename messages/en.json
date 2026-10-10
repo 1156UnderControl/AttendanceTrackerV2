@@ -283,7 +283,6 @@
       "position": "#",
       "name": "Name",
       "seasonHours": "Season",
-      "summary": "{active} active · average {avg} this week · {atGoal} met the goal (≥ {green}%)",
       "presentTitle": "In the lab now",
       "presentEmpty": "Nobody is in the lab right now.",
       "since": "since {time}",

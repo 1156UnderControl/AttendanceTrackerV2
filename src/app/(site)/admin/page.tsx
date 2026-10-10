@@ -140,24 +140,9 @@ export default async function AdminDashboard({ searchParams }: PageProps<"/admin
         </Card>
       ) : (
         rankings.map(({ track, rows }) => {
-          const values = rows.map((r) => r.weekPct).filter((v): v is number => v !== null);
-          const avg = values.length ? values.reduce((a, b) => a + b, 0) / values.length : null;
-          const atGoal = values.filter((v) => v >= thresholds.green).length;
           return (
             <Section key={track} title={`${t(`labels.${track}`)} · ${weekLabel(week)}`}>
-              <div
-                className="flex flex-wrap items-center justify-between gap-3"
-                data-testid={`summary-${track}`}
-              >
-                {/* 004-AC6 */}
-                <p className="font-semibold">
-                  {t("admin.dashboard.summary", {
-                    active: rows.length,
-                    avg: pct(avg),
-                    atGoal,
-                    green: thresholds.green,
-                  })}
-                </p>
+              <div className="flex justify-end" data-testid={`ranking-actions-${track}`}>
                 <a
                   href={`/admin/exportar/ranking?${exportQuery}&track=${track}`}
                   className="rounded-brutal border-2 border-ink bg-white px-3 py-1.5 font-bold shadow-brutal"

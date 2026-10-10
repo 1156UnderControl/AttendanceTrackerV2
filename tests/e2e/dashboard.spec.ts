@@ -8,9 +8,7 @@ const SEASON = "00000000-0000-4000-8000-000000002026";
 const WEEK = `/admin?season=${SEASON}&week=2026-09-28`;
 
 test.describe("dashboard", () => {
-  test("[004-AC1][004-AC2][004-AC3][004-AC6] three rankings per track with summaries", async ({
-    page,
-  }) => {
+  test("[004-AC1][004-AC2][004-AC3] three rankings per track with summaries", async ({ page }) => {
     await devLogin(page, "admin@local.test", WEEK);
 
     const frc = page.getByTestId("ranking-FRC_STUDENTS");
@@ -26,10 +24,6 @@ test.describe("dashboard", () => {
     await expect(page.getByTestId("ranking-MENTORS")).not.toContainText("Ana FRC");
     await expect(frc).not.toContainText("Mentor");
     await expect(page.getByTestId("ranking-FTC_STUDENTS")).toContainText("Carla FTC (demo)");
-
-    await expect(page.getByTestId("summary-FRC_STUDENTS")).toContainText(
-      /\d+ ativos · média \d+% na semana/,
-    );
   });
 
   test("[004-AC4] choose the week from the list or step with the arrows", async ({ page }) => {
@@ -71,7 +65,7 @@ test.describe("dashboard", () => {
 
     const rankingDownload = page.waitForEvent("download");
     await page
-      .getByTestId("summary-FRC_STUDENTS")
+      .getByTestId("ranking-actions-FRC_STUDENTS")
       .getByRole("link", { name: "Exportar CSV" })
       .click();
     const bytes = readFileSync(await (await rankingDownload).path());
