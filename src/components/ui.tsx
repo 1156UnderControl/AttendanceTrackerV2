@@ -40,7 +40,7 @@ export function Card({
 }) {
   return (
     <section
-      className={`rounded-brutal border-2 border-ink p-5 shadow-brutal ${tone === "brand" ? "bg-brand" : "bg-white"} ${className}`}
+      className={`rounded-brutal border-2 border-ink p-4 shadow-brutal sm:p-5 ${tone === "brand" ? "bg-brand" : "bg-white"} ${className}`}
     >
       {title && <h2 className="mb-4 text-xl font-black">{title}</h2>}
       {children}
@@ -85,7 +85,7 @@ export function Alert({
 }
 
 export function PageTitle({ children }: { children: ReactNode }) {
-  return <h1 className="mb-6 text-3xl font-black">{children}</h1>;
+  return <h1 className="mb-4 text-2xl font-black sm:mb-6 sm:text-3xl">{children}</h1>;
 }
 
 /** V1 "styled-table": bordered box with a hard shadow, sticky yellow header, zebra rows, centered cells. */
@@ -99,7 +99,9 @@ export function Table({ children }: { children: ReactNode }) {
 
 export function Th({ children, className = "" }: { children?: ReactNode; className?: string }) {
   return (
-    <th className={`sticky top-0 z-10 bg-brand px-4 py-3 font-bold text-ink ${className}`}>
+    <th
+      className={`sticky top-0 z-10 whitespace-nowrap bg-brand px-4 py-3 font-bold text-ink ${className}`}
+    >
       {children}
     </th>
   );
@@ -117,7 +119,7 @@ export function Tr({ children, ...props }: ComponentProps<"tr">) {
 }
 
 export function Td({ children, className = "" }: { children?: ReactNode; className?: string }) {
-  return <td className={`px-4 py-3 ${className}`}>{children}</td>;
+  return <td className={`whitespace-nowrap px-4 py-3 ${className}`}>{children}</td>;
 }
 
 /** A titled block without a frame, used around tables (the table brings its own border). */

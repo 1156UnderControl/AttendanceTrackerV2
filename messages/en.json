@@ -23,7 +23,8 @@
     "kiosk": "Kiosk",
     "sessions": "Sessions",
     "audit": "Audit log",
-    "seasons": "Seasons"
+    "seasons": "Seasons",
+    "adminSections": "Admin sections"
   },
   "labels": {
     "student": "Student",

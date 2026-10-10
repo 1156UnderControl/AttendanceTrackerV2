@@ -100,16 +100,19 @@ export function KioskClient({ initialPresent }: { initialPresent: Present[] }) {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="flex items-center justify-between gap-4 bg-navy px-4 py-2 text-white">
-        <p className="text-2xl font-bold tabular-nums" suppressHydrationWarning>
+      <header className="flex items-center justify-between gap-2 bg-navy px-3 py-2 text-white sm:gap-4 sm:px-4">
+        <p
+          className="text-lg font-bold whitespace-nowrap tabular-nums sm:text-2xl"
+          suppressHydrationWarning
+        >
           {now !== null &&
             new Intl.DateTimeFormat(locale, {
-              weekday: "long",
+              weekday: "short",
               hour: "2-digit",
               minute: "2-digit",
             }).format(now)}
         </p>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <LanguageFlags
             current={locale}
             disabled={pending}
@@ -126,7 +129,7 @@ export function KioskClient({ initialPresent }: { initialPresent: Present[] }) {
             width={1200}
             height={350}
             priority
-            className="h-12 w-auto"
+            className="h-8 w-auto sm:h-12"
           />
         </div>
       </header>
